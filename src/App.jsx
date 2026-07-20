@@ -1,34 +1,32 @@
-import Header from "./components/Header";
-import About from "./components/About";
-import Skills from "./components/Skills";
+import { Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Projects from "./pages/Projects";
+import Contact from "./pages/Contact";
+import NotFound from "./pages/NotFound";
+
 import "./App.css";
 
 function App() {
-
-const skills = [
-  "Python",
-  "JavaScript",
-  "React",
-  "Node.js",
-  "HTML",
-  "CSS",
-  "SQL",
-  "Power BI",
-  "Machine Learning",
-  "Git & GitHub"
-];
-
   return (
     <>
-      <Header
-        name="Have Patel"
-        role="AI & ML Student"
-      />
+      <Navbar />
 
-      <About />
+      <Routes>
+        <Route path="/" element={<Home />} />
 
-      <Skills skillList={skills} />
+        <Route path="/about" element={<About />} />
+
+        <Route path="/projects" element={<Projects />} />
+
+        <Route path="/contact" element={<Contact />} />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
 
       <Footer />
     </>
