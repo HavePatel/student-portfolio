@@ -1,0 +1,131 @@
+/* ==============================================
+   REPO DETAIL PAGE
+============================================== */
+
+.repo-detail-page {
+  padding: 120px 0;
+  background: var(--bg);
+  min-height: 80vh;
+}
+
+.repo-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tan);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 32px;
+  transition: transform 0.25s ease;
+}
+
+.repo-detail__back:hover {
+  transform: translateX(-4px);
+}
+
+.repo-detail__card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 12px 40px var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.repo-detail__header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 28px;
+}
+
+.repo-detail__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.repo-detail__title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 0;
+}
+
+.repo-detail__desc {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+.repo-detail__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+
+.repo-detail__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.repo-detail__stat svg {
+  color: var(--tan);
+}
+
+.repo-detail__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.repo-detail__readme {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 0.95rem;
+  overflow-x: auto;
+}
+
+.repo-detail__readme-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  color: var(--heading);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.repo-detail__readme pre {
+  background: var(--surface);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .repo-detail-page {
+    padding: 80px 0;
+  }
+  .repo-detail__card {
+    padding: 28px 24px;
+  }
+  .repo-detail__title {
+    font-size: 2rem;
+  }
+}

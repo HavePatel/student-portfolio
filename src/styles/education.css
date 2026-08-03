@@ -1,0 +1,204 @@
+/* ==============================================
+   SECTION
+============================================== */
+
+.education {
+  padding: 120px 0;
+  background: var(--bg);
+}
+
+/* ==============================================
+   TIMELINE WRAPPER
+============================================== */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ==============================================
+   TIMELINE ITEM
+============================================== */
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 0 28px;
+  position: relative;
+}
+
+/* ==============================================
+   SPINE
+============================================== */
+
+.timeline-spine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-dot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(210, 180, 140, 0.55);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tan);
+  flex-shrink: 0;
+  z-index: 1;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-item:hover .timeline-dot {
+  border-color: var(--tan);
+  box-shadow: 0 0 0 6px rgba(210, 180, 140, 0.1);
+}
+
+.timeline-line {
+  width: 1.5px;
+  flex: 1;
+  background: rgba(210, 180, 140, 0.2);
+  min-height: 32px;
+}
+
+.timeline-item:last-child .timeline-line {
+  display: none;
+}
+
+/* ==============================================
+   CARD
+============================================== */
+
+.timeline-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 40px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 32px var(--card-shadow);
+  transition: transform 0.32s ease, box-shadow 0.32s ease, border-color 0.32s ease;
+}
+
+.timeline-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px var(--card-shadow);
+  border-color: rgba(210, 180, 140, 0.6);
+}
+
+/* ==============================================
+   META
+============================================== */
+
+.timeline-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.timeline-period,
+.timeline-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tan);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ==============================================
+   TEXT
+============================================== */
+
+.timeline-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.timeline-institution {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.timeline-desc {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+}
+
+/* ==============================================
+   HIGHLIGHT TAGS
+============================================== */
+
+.timeline-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 50px;
+  border: 1px solid rgba(210, 180, 140, 0.4);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.22s ease, border-color 0.22s ease;
+}
+
+.timeline-tag:hover {
+  background: rgba(210, 180, 140, 0.12);
+  border-color: var(--tan);
+}
+
+/* ==============================================
+   RESPONSIVE
+============================================== */
+
+@media (max-width: 600px) {
+  .education {
+    padding: 80px 0;
+  }
+
+  .timeline-item {
+    grid-template-columns: 40px 1fr;
+    gap: 0 16px;
+  }
+
+  .timeline-dot {
+    width: 38px;
+    height: 38px;
+  }
+
+  .timeline-card {
+    padding: 24px 22px;
+    margin-bottom: 24px;
+  }
+
+  .timeline-title {
+    font-size: 1.4rem;
+  }
+
+  .timeline-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

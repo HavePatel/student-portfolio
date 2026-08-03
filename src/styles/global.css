@@ -1,0 +1,230 @@
+/* ==========================================
+   GOOGLE FONT IMPORT
+========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+/* ==========================================
+   RESET
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+    scroll-padding-top: 76px;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    overflow-x:hidden;
+}
+
+
+/* ==========================================
+   THEME VARIABLES
+========================================== */
+
+:root{
+    --oxford:#002147;
+    --tan:#D2B48C;
+    --white:#F8F8F8;
+    --black:#111111;
+    --transition:.35s ease;
+
+    /* Default Light Mode Variables */
+    --bg:#F8F6F2;
+    --bg-alt:#fafafa;
+    --surface:#ffffff;
+    --text:#002147;
+    --text-secondary:#445266;
+    --text-muted:#667085;
+    --heading:#002147;
+    --muted:#5b6472;
+    --border:#d7d7d7;
+    --card-shadow:rgba(0,33,71,.06);
+    --header-bg:rgba(0, 33, 71, 0.92);
+    --header-bg-scrolled:rgba(0, 33, 71, 0.98);
+}
+
+
+/* ---------- LIGHT ---------- */
+
+.light{
+    --bg:#F8F6F2;
+    --bg-alt:#fafafa;
+    --surface:#ffffff;
+    --text:#002147;
+    --text-secondary:#445266;
+    --text-muted:#667085;
+    --heading:#002147;
+    --muted:#5b6472;
+    --border:#d7d7d7;
+    --card-shadow:rgba(0,33,71,.06);
+    --header-bg:rgba(0, 33, 71, 0.92);
+    --header-bg-scrolled:rgba(0, 33, 71, 0.98);
+}
+
+
+/* ---------- DARK ---------- */
+
+.dark{
+    --bg:#001733;
+    --bg-alt:#002147;
+    --surface:#062A52;
+    --text:#F5F5F5;
+    --text-secondary:#D0D8E4;
+    --text-muted:#A0AEC0;
+    --heading:#D2B48C;
+    --muted:#CFCFCF;
+    --border:rgba(210,180,140,.2);
+    --card-shadow:rgba(0,0,0,.25);
+    --header-bg:rgba(6, 30, 60, 0.95);
+    --header-bg-scrolled:rgba(4, 20, 42, 0.98);
+}
+
+
+/* ==========================================
+   GLOBAL
+========================================== */
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    transition:var(--transition);
+}
+
+
+h1,h2,h3,h4{
+    font-family:'Cormorant Garamond',serif;
+    color:var(--heading);
+}
+
+
+p{
+    color:var(--muted);
+    line-height:1.8;
+}
+
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+
+button{
+    font-family:'Poppins',sans-serif;
+    cursor:pointer;
+}
+
+
+/* ==========================================
+   CONTAINER
+========================================== */
+
+.container{
+    width:min(92%,1200px);
+    margin:auto;
+}
+
+
+/* ==========================================
+   SECTION
+========================================== */
+
+section{
+    padding:120px 0;
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:15px 34px;
+    border-radius:50px;
+    font-weight:600;
+    transition:var(--transition);
+}
+
+
+.btn-primary{
+    background:var(--tan);
+    color:var(--oxford);
+}
+
+
+.btn-primary:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 30px rgba(210,180,140,.3);
+}
+
+
+.btn-outline{
+    border:1px solid var(--tan);
+    color:var(--tan);
+}
+
+
+.btn-outline:hover{
+    background:var(--tan);
+    color:var(--oxford);
+}
+
+
+/* ==========================================
+   SELECTION
+========================================== */
+
+::selection{
+    background:var(--tan);
+    color:var(--oxford);
+}
+
+
+/* ==========================================
+   SECTION HEADING — shared across sections
+========================================== */
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.section-heading span {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tan);
+  margin-bottom: 12px;
+}
+
+.section-heading h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--heading);
+  line-height: 1.18;
+}
+
+/* ==========================================
+   HOME CARD HOVER
+========================================== */
+
+.home-card-hover:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 16px 40px var(--card-shadow) !important;
+  border-color: rgba(210, 180, 140, 0.5) !important;
+}

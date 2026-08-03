@@ -1,0 +1,291 @@
+/* ==============================================
+   SECTION
+============================================== */
+
+.contact {
+  padding: 120px 0;
+  background: var(--bg-alt);
+}
+
+/* ==============================================
+   LAYOUT  (left info | right form)
+============================================== */
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* ==============================================
+   LEFT — INFO
+============================================== */
+
+.contact-intro {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+}
+
+/* ==============================================
+   CONTACT LINK LIST
+============================================== */
+
+.contact-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-link-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.contact-link-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(210, 180, 140, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tan);
+  flex-shrink: 0;
+  transition: background 0.25s ease;
+}
+
+.contact-link-item:hover .contact-link-icon {
+  background: rgba(210, 180, 140, 0.1);
+}
+
+.contact-link-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-link-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--tan);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.contact-link-value {
+  font-size: 0.92rem;
+  color: var(--oxford);
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.22s ease;
+}
+
+a.contact-link-value:hover {
+  opacity: 0.65;
+}
+
+/* ==============================================
+   RESUME BUTTON
+============================================== */
+
+.contact-resume-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 26px;
+  border-radius: 50px;
+  border: 1px solid rgba(210, 180, 140, 0.5);
+  color: var(--oxford);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.contact-resume-btn:hover {
+  background: var(--tan);
+  border-color: var(--tan);
+  color: var(--oxford);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(210, 180, 140, 0.3);
+}
+
+/* ==============================================
+   FORM WRAP
+============================================== */
+
+.contact-form-wrap {
+  background: #ffffff;
+  border: 1px solid rgba(210, 180, 140, 0.3);
+  border-radius: 22px;
+  padding: 48px 44px;
+  box-shadow: 0 8px 32px rgba(0, 33, 71, 0.05);
+}
+
+/* ==============================================
+   FORM
+============================================== */
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--oxford);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 13px 16px;
+  border: 1px solid rgba(210, 180, 140, 0.35);
+  border-radius: 12px;
+  background: #fafafa;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  color: var(--oxford);
+  outline: none;
+  resize: none;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #bbb;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--tan);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(210, 180, 140, 0.12);
+}
+
+/* ==============================================
+   SUBMIT BUTTON
+============================================== */
+
+.contact-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 32px;
+  border-radius: 50px;
+  border: none;
+  background: var(--oxford);
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.contact-submit:hover {
+  background: #00306e;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 33, 71, 0.2);
+}
+
+/* ==============================================
+   SUCCESS STATE
+============================================== */
+
+.contact-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+  padding: 60px 20px;
+}
+
+.contact-success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(210, 180, 140, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tan);
+}
+
+.contact-success h3 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2rem;
+  color: var(--oxford);
+}
+
+.contact-success p {
+  font-size: 0.95rem;
+  color: #777;
+}
+
+/* ==============================================
+   RESPONSIVE — TABLET (≤ 960px)
+============================================== */
+
+@media (max-width: 960px) {
+  .contact-layout {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .contact-form-wrap {
+    padding: 36px 30px;
+  }
+}
+
+/* ==============================================
+   RESPONSIVE — MOBILE (≤ 600px)
+============================================== */
+
+@media (max-width: 600px) {
+  .contact {
+    padding: 80px 0;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form-wrap {
+    padding: 28px 22px;
+  }
+
+  .contact-submit {
+    width: 100%;
+    justify-content: center;
+  }
+}

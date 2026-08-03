@@ -1,0 +1,171 @@
+/* ==============================================
+   SECTION
+============================================== */
+
+.skills {
+  padding: 120px 0;
+  background: var(--bg);
+}
+
+/* ==============================================
+   GRID
+============================================== */
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+/* ==============================================
+   CARD
+============================================== */
+
+.skill-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 38px 40px 36px;
+  box-shadow: 0 8px 32px var(--card-shadow);
+  transition: transform 0.32s ease, box-shadow 0.32s ease,
+    border-color 0.32s ease;
+  will-change: transform;
+}
+
+.skill-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px var(--card-shadow);
+  border-color: rgba(210, 180, 140, 0.65);
+}
+
+/* ==============================================
+   CARD HEADER
+============================================== */
+
+.skill-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.skill-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tan);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.skill-card:hover .skill-card__icon {
+  transform: scale(1.12);
+}
+
+.skill-card__title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* ==============================================
+   DIVIDER
+============================================== */
+
+.skill-card__divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(210, 180, 140, 0.25);
+  margin-bottom: 24px;
+}
+
+/* ==============================================
+   BADGES
+============================================== */
+
+.skill-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 18px;
+  border-radius: 50px;
+  border: 1px solid rgba(210, 180, 140, 0.45);
+  background: transparent;
+  color: var(--text);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: default;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
+    transform 0.25s ease, box-shadow 0.25s ease;
+  white-space: nowrap;
+}
+
+.skill-badge:hover {
+  background: var(--tan);
+  color: var(--oxford);
+  border-color: var(--tan);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(210, 180, 140, 0.3);
+}
+
+/* ==============================================
+   RESPONSIVE
+============================================== */
+
+@media (max-width: 900px) {
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .skill-card {
+    padding: 30px 28px;
+  }
+
+  .skill-card__title {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .skills {
+    padding: 80px 0;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .skill-card {
+    padding: 28px 24px;
+  }
+
+  .skill-card__header {
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .skill-card__title {
+    font-size: 1.3rem;
+  }
+
+  .skill-badge {
+    font-size: 0.8rem;
+    padding: 6px 15px;
+  }
+
+  .section-heading h2 {
+    font-size: 2.6rem;
+  }
+}

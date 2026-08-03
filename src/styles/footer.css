@@ -1,0 +1,310 @@
+/* ==============================================
+   FOOTER
+   Oxford Blue bg · Tan accents · Premium spacing
+============================================== */
+
+.footer {
+  background: var(--oxford);
+  padding: 72px 0 0;
+  border-top: 1px solid rgba(210, 180, 140, 0.14);
+}
+
+/* ==============================================
+   THREE-COLUMN BODY
+============================================== */
+
+.footer-body {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.2fr;
+  gap: 56px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid rgba(210, 180, 140, 0.1);
+}
+
+/* ==============================================
+   COLUMN TITLE
+============================================== */
+
+.footer-col-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tan);
+  margin-bottom: 22px;
+}
+
+/* ==============================================
+   COL 1 — BRAND
+============================================== */
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-logo {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--tan);
+  text-decoration: none;
+  line-height: 1;
+  transition: opacity 0.25s ease;
+}
+
+.footer-logo:hover { opacity: 0.75; }
+
+.footer-role {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.footer-bio {
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.75;
+  margin: 0;
+  max-width: 280px;
+}
+
+/* ==============================================
+   COL 2 — NAVIGATION
+============================================== */
+
+.footer-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-nav-link {
+  display: inline-block;
+  padding: 5px 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.58);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.26s ease, transform 0.26s ease;
+}
+
+/* Sliding underline */
+.footer-nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--tan);
+  border-radius: 2px;
+  transition: width 0.28s ease;
+}
+
+.footer-nav-link:hover {
+  color: var(--tan);
+  transform: translateX(4px);
+}
+
+.footer-nav-link:hover::after { width: 100%; }
+
+/* ==============================================
+   COL 3 — CONNECT
+============================================== */
+
+.footer-connect {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-social-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-social-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.24s ease, transform 0.24s ease;
+}
+
+.footer-social-row:hover {
+  color: var(--tan);
+  transform: translateX(4px);
+}
+
+.footer-social-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(210, 180, 140, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.24s ease, border-color 0.24s ease, color 0.24s ease,
+    transform 0.24s ease;
+}
+
+.footer-social-row:hover .footer-social-icon {
+  background: rgba(210, 180, 140, 0.12);
+  border-color: var(--tan);
+  color: var(--tan);
+  transform: translateY(-2px);
+}
+
+.footer-social-label { letter-spacing: 0.01em; }
+
+/* ── Location block ─────────────────────────── */
+.footer-location {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-location-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.footer-location-row svg { color: rgba(210, 180, 140, 0.5); flex-shrink: 0; }
+
+.footer-location-row--highlight {
+  color: rgba(210, 180, 140, 0.7);
+}
+
+.footer-location-row--highlight svg { color: var(--tan); }
+
+/* ==============================================
+   BOTTOM BAR
+============================================== */
+
+.footer-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 22px 0;
+  gap: 16px;
+}
+
+.footer-bottom-left {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.28);
+  margin: 0;
+  justify-self: start;
+}
+
+.footer-bottom-center {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.28);
+  margin: 0;
+  justify-self: center;
+  white-space: nowrap;
+}
+
+/* ── Back to Top ────────────────────────────── */
+.footer-top-btn {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(210, 180, 140, 0.3);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.26s ease, border-color 0.26s ease,
+    color 0.26s ease, transform 0.26s ease, box-shadow 0.26s ease;
+}
+
+.footer-top-btn:hover {
+  background: rgba(210, 180, 140, 0.1);
+  border-color: var(--tan);
+  color: var(--tan);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(210, 180, 140, 0.15);
+}
+
+/* ==============================================
+   RESPONSIVE — TABLET (≤ 860px)
+============================================== */
+
+@media (max-width: 860px) {
+  .footer-body {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  /* Brand spans both columns */
+  .footer-brand { grid-column: 1 / -1; }
+
+  .footer-bio { max-width: 100%; }
+
+  .footer-bottom {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .footer-bottom-left   { grid-column: 1; }
+  .footer-top-btn       { grid-column: 2; }
+  .footer-bottom-center { grid-column: 1 / -1; justify-self: start; }
+}
+
+/* ==============================================
+   RESPONSIVE — MOBILE (≤ 560px)
+============================================== */
+
+@media (max-width: 560px) {
+  .footer { padding: 52px 0 0; }
+
+  .footer-body {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding-bottom: 44px;
+  }
+
+  .footer-brand     { grid-column: auto; }
+  .footer-bio       { max-width: 100%; }
+
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 24px 0;
+  }
+
+  .footer-bottom-left,
+  .footer-bottom-center,
+  .footer-top-btn { justify-self: center; }
+
+  .footer-nav-link:hover { transform: none; }
+  .footer-social-row:hover { transform: none; }
+}

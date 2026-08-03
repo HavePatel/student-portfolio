@@ -1,0 +1,113 @@
+/* =========================
+   ABOUT
+========================= */
+
+.about {
+    padding: 120px 0;
+    background: var(--bg-alt);
+}
+
+.section-heading {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.section-heading span {
+    color: var(--tan);
+    letter-spacing: 4px;
+    font-size: .9rem;
+    text-transform: uppercase;
+}
+
+.section-heading h2 {
+    font-size: 3.4rem;
+    margin-top: 15px;
+    color: var(--heading);
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 100px;
+    align-items: center;
+}
+
+/* =========================
+   LEFT
+========================= */
+
+.about-left h3 {
+    font-size: 2.6rem;
+    line-height: 1.4;
+    color: var(--heading);
+    margin-bottom: 35px;
+    font-weight: 700;
+}
+
+.about-left p {
+    font-size: 1.2rem;
+    line-height: 1.9;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+/* =========================
+   RIGHT
+========================= */
+
+.about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 45px;
+    box-shadow: 0 15px 40px var(--card-shadow);
+}
+
+.about-item:not(:last-child) {
+    margin-bottom: 30px;
+}
+
+.about-item h4 {
+    font-size: 1.2rem;
+    color: var(--heading);
+    margin-bottom: 10px;
+}
+
+.about-item p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px){
+    .about-content{
+        grid-template-columns:1fr;
+    }
+    .about{
+        text-align:center;
+    }
+}
+
+.about-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.about-title svg {
+    color: var(--tan);
+}
+
+.about-title h4 {
+    margin: 0;
+    color: var(--heading);
+}

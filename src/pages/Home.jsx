@@ -1,62 +1,95 @@
 import { Link } from "react-router-dom";
-import Skills from "../components/Skills";
+import { User, Code2, GraduationCap, Mail, ArrowRight } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+import Hero from "../components/sections/Hero";
+import Container from "../components/ui/Container";
+
+const quickLinks = [
+  {
+    title: "About Me",
+    desc: "Background, degree at CHARUSAT, and core interests in AI/ML.",
+    to: "/about",
+    icon: <User size={24} />,
+  },
+  {
+    title: "Skills",
+    desc: "Frontend, backend, ML frameworks, and developer tools.",
+    to: "/skills",
+    icon: <Code2 size={24} />,
+  },
+  {
+    title: "GitHub Explorer",
+    desc: "Browse repositories, tech stack, and live activity for any GitHub user.",
+    to: "/github",
+    icon: <FaGithub size={24} />,
+  },
+  {
+    title: "Education",
+    desc: "B.Tech in Artificial Intelligence & Machine Learning at CHARUSAT.",
+    to: "/education",
+    icon: <GraduationCap size={24} />,
+  },
+  {
+    title: "Get In Touch",
+    desc: "Open for internships, research collaborations, and projects.",
+    to: "/contact",
+    icon: <Mail size={24} />,
+  },
+];
 
 function Home() {
-  const skills = [
-    "Python",
-    "JavaScript",
-    "React",
-    "Node.js",
-    "HTML",
-    "CSS",
-    "SQL",
-    "Power BI",
-    "Machine Learning",
-    "Git & GitHub",
-  ];
-
   return (
     <>
-      {/* Hero Section */}
-      <section className="hero">
-        <p className="portfolio-title">My Portfolio</p>
+      <Hero />
 
-        <h1>Have Patel</h1>
+      <section style={{ padding: "80px 0 120px", background: "var(--bg-alt)" }}>
+        <Container>
+          <div className="section-heading">
+            <span>EXPLORE MY PORTFOLIO</span>
+            <h2>What You Will Find Here</h2>
+          </div>
 
-        <h2>AI & ML Student</h2>
-
-        <p className="hero-text">
-          AI | Machine Learning | Full Stack Developer
-        </p>
-
-        <Link to="/projects" className="btn">
-          View Projects
-        </Link>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: "24px",
+            }}
+          >
+            {quickLinks.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "20px",
+                  padding: "32px 28px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
+                  textDecoration: "none",
+                  color: "inherit",
+                  boxShadow: "0 6px 24px var(--card-shadow)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
+                }}
+                className="home-card-hover"
+              >
+                <div style={{ color: "var(--tan)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  {item.icon}
+                  <ArrowRight size={18} />
+                </div>
+                <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.6rem", margin: 0, color: "var(--heading)" }}>
+                  {item.title}
+                </h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", margin: 0, lineHeight: 1.6 }}>
+                  {item.desc}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </Container>
       </section>
-
-      {/* About Section */}
-      <section className="about">
-        <h2>About Me</h2>
-
-        <p>
-          Hello! I'm <strong>Have Patel</strong>, a B.Tech student
-          specializing in Artificial Intelligence and Machine Learning at
-          CHARUSAT University.
-        </p>
-
-        <p>
-          I am passionate about Artificial Intelligence, Data Analytics,
-          Full Stack Development, and creating innovative digital solutions.
-        </p>
-
-        <p>
-          I enjoy building AI applications, analyzing data, and developing
-          modern web applications that solve real-world problems.
-        </p>
-      </section>
-
-      {/* Skills Section */}
-      <Skills skillList={skills} />
     </>
   );
 }
