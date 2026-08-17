@@ -1,26 +1,52 @@
 /**
  * server/index.js
- * Express REST API for the Task Manager (Practical 4)
+ * Express REST API for Student Portfolio Task Manager (Practical 6)
+ * Backed by MongoDB via Mongoose.
  *
  * Routes:
- *   GET    /tasks          — fetch all tasks
- *   POST   /tasks          — create a task
- *   PUT    /tasks/:id      — update a task
- *   DELETE /tasks/:id      — delete a task
+ *   GET    /tasks          — fetch all tasks from MongoDB
+ *   POST   /tasks          — create a task in MongoDB
+ *   PUT    /tasks/:id      — update a task by MongoDB _id
+ *   DELETE /tasks/:id      — delete a task by MongoDB _id
+ *   GET    /health         — health & DB connection check
  *
  * Run:  node server/index.js   (from project root)
  *       or: npm run server
  */
 
+import "dotenv/config";
 import express from "express";
-import cors    from "cors";
-import { randomUUID } from "crypto";
+import cors from "cors";
+import mongoose from "mongoose";
+import Task from "./models/Task.js";
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT ?? 5000;
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/student_portfolio";
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+
+/* ── MongoDB Connection ──────────────────────────────────── */
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log(`  ✓  Connected to MongoDB: ${MONGODB_URI}`);
+  })
+  .catch((err) => {
+    console.error("  ✗  MongoDB connection error:", err.message);
+    console.error(
+      "     Please ensure your MongoDB server is running (e.g. mongod or MongoDB Community Server)."
+    );
+  });
 
 /* ── Middleware ──────────────────────────────────────────── */
-app.use(cors({ origin: "http://localhost:5173" }));  // Vite dev server
+app.use(
+  cors({
+    origin: CLIENT_ORIGIN,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 app.use(express.json());
 
 // Request logger middleware
@@ -29,116 +55,171 @@ app.use((req, _res, next) => {
   next();
 });
 
-/* ── In-memory data store ────────────────────────────────── */
-// Seeded with demo tasks so the UI is never blank on first load.
-let tasks = [
-  {
-    id:          randomUUID(),
-    title:       "Set up Express server",
-    description: "Initialise the Node/Express backend with CORS and JSON middleware.",
-    status:      "completed",
-    createdAt:   new Date("2025-07-01T09:00:00Z").toISOString(),
-    updatedAt:   new Date("2025-07-01T09:30:00Z").toISOString(),
-  },
-  {
-    id:          randomUUID(),
-    title:       "Build REST API endpoints",
-    description: "Implement GET, POST, PUT and DELETE routes for the task resource.",
-    status:      "completed",
-    createdAt:   new Date("2025-07-01T10:00:00Z").toISOString(),
-    updatedAt:   new Date("2025-07-01T11:00:00Z").toISOString(),
-  },
-  {
-    id:          randomUUID(),
-    title:       "Integrate React frontend",
-    description: "Connect the React Task Manager page to the Express API using fetch.",
-    status:      "pending",
-    createdAt:   new Date("2025-07-02T08:00:00Z").toISOString(),
-    updatedAt:   new Date("2025-07-02T08:00:00Z").toISOString(),
-  },
-];
-
-/* ── Validation helper ───────────────────────────────────── */
-function validateTask({ title, description, status }) {
-  const errors = [];
-  if (!title?.trim())       errors.push("Title is required.");
-  if (!description?.trim()) errors.push("Description is required.");
-  if (status && !["pending", "completed"].includes(status))
-    errors.push("Status must be 'pending' or 'completed'.");
-  return errors;
-}
+/* ── Health check ────────────────────────────────────────── */
+app.get("/health", (_req, res) => {
+  const dbStatus =
+    mongoose.connection.readyState === 1
+      ? "connected"
+      : mongoose.connection.readyState === 2
+      ? "connecting"
+      : "disconnected";
+  res.json({
+    status: "ok",
+    database: dbStatus,
+    timestamp: new Date().toISOString(),
+  });
+});
 
 /* ── Routes ──────────────────────────────────────────────── */
 
-// GET /tasks
-app.get("/tasks", (_req, res) => {
-  res.json({ success: true, data: tasks, count: tasks.length });
+// GET /tasks — fetch all tasks (newest first)
+app.get("/tasks", async (_req, res) => {
+  try {
+    const tasks = await Task.find().sort({ createdAt: -1 });
+    res.json({ success: true, data: tasks, count: tasks.length });
+  } catch (err) {
+    console.error("Error fetching tasks:", err);
+    res.status(500).json({
+      success: false,
+      errors: [err.message || "Failed to fetch tasks from database."],
+    });
+  }
 });
 
-// POST /tasks
-app.post("/tasks", (req, res) => {
-  const { title, description, status = "pending" } = req.body;
+// POST /tasks — create a new task
+app.post("/tasks", async (req, res) => {
+  try {
+    const { title, description = "", status, completed } = req.body;
 
-  const errors = validateTask({ title, description, status });
-  if (errors.length) {
-    return res.status(400).json({ success: false, errors });
+    if (!title || !title.trim()) {
+      return res
+        .status(400)
+        .json({ success: false, errors: ["Title is required."] });
+    }
+
+    const isCompleted =
+      completed !== undefined ? Boolean(completed) : status === "completed";
+    const finalStatus =
+      status && ["pending", "completed"].includes(status)
+        ? status
+        : isCompleted
+        ? "completed"
+        : "pending";
+
+    const task = await Task.create({
+      title: title.trim(),
+      description: typeof description === "string" ? description.trim() : "",
+      completed: isCompleted,
+      status: finalStatus,
+    });
+
+    res.status(201).json({ success: true, data: task });
+  } catch (err) {
+    console.error("Error creating task:", err);
+    const errors =
+      err.name === "ValidationError"
+        ? Object.values(err.errors).map((e) => e.message)
+        : [err.message || "Failed to create task."];
+    res.status(400).json({ success: false, errors });
   }
-
-  const now  = new Date().toISOString();
-  const task = {
-    id:          randomUUID(),
-    title:       title.trim(),
-    description: description.trim(),
-    status,
-    createdAt:   now,
-    updatedAt:   now,
-  };
-
-  tasks.unshift(task);   // newest first
-  res.status(201).json({ success: true, data: task });
 });
 
-// PUT /tasks/:id
-app.put("/tasks/:id", (req, res) => {
-  const { id } = req.params;
-  const index  = tasks.findIndex((t) => t.id === id);
+// PUT /tasks/:id — update an existing task
+app.put("/tasks/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  if (index === -1) {
-    return res.status(404).json({ success: false, errors: ["Task not found."] });
+    // Validate MongoDB ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .json({ success: false, errors: ["Invalid task ID format."] });
+    }
+
+    const { title, description, status, completed } = req.body;
+    const updateData = {};
+
+    if (title !== undefined) {
+      if (!title.trim()) {
+        return res
+          .status(400)
+          .json({ success: false, errors: ["Title cannot be empty."] });
+      }
+      updateData.title = title.trim();
+    }
+
+    if (description !== undefined) {
+      updateData.description = typeof description === "string" ? description.trim() : "";
+    }
+
+    if (completed !== undefined) {
+      updateData.completed = Boolean(completed);
+      updateData.status = updateData.completed ? "completed" : "pending";
+    }
+
+    if (status !== undefined) {
+      if (!["pending", "completed"].includes(status)) {
+        return res.status(400).json({
+          success: false,
+          errors: ["Status must be 'pending' or 'completed'."],
+        });
+      }
+      updateData.status = status;
+      if (completed === undefined) {
+        updateData.completed = status === "completed";
+      }
+    }
+
+    const task = await Task.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!task) {
+      return res
+        .status(404)
+        .json({ success: false, errors: ["Task not found."] });
+    }
+
+    res.json({ success: true, data: task });
+  } catch (err) {
+    console.error("Error updating task:", err);
+    const errors =
+      err.name === "ValidationError"
+        ? Object.values(err.errors).map((e) => e.message)
+        : [err.message || "Failed to update task."];
+    res.status(400).json({ success: false, errors });
   }
-
-  const { title, description, status } = req.body;
-  const errors = validateTask({
-    title:       title       ?? tasks[index].title,
-    description: description ?? tasks[index].description,
-    status:      status      ?? tasks[index].status,
-  });
-  if (errors.length) {
-    return res.status(400).json({ success: false, errors });
-  }
-
-  tasks[index] = {
-    ...tasks[index],
-    title:       (title       ?? tasks[index].title).trim(),
-    description: (description ?? tasks[index].description).trim(),
-    status:      status ?? tasks[index].status,
-    updatedAt:   new Date().toISOString(),
-  };
-
-  res.json({ success: true, data: tasks[index] });
 });
 
-// DELETE /tasks/:id
-app.delete("/tasks/:id", (req, res) => {
-  const { id } = req.params;
-  const before = tasks.length;
-  tasks = tasks.filter((t) => t.id !== id);
+// DELETE /tasks/:id — delete a task
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  if (tasks.length === before) {
-    return res.status(404).json({ success: false, errors: ["Task not found."] });
+    // Validate MongoDB ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .json({ success: false, errors: ["Invalid task ID format."] });
+    }
+
+    const task = await Task.findByIdAndDelete(id);
+
+    if (!task) {
+      return res
+        .status(404)
+        .json({ success: false, errors: ["Task not found."] });
+    }
+
+    res.json({ success: true, message: "Task deleted successfully." });
+  } catch (err) {
+    console.error("Error deleting task:", err);
+    res.status(500).json({
+      success: false,
+      errors: [err.message || "Failed to delete task."],
+    });
   }
-
-  res.json({ success: true, message: "Task deleted." });
 });
 
 /* ── 404 catch-all ───────────────────────────────────────── */
@@ -146,7 +227,7 @@ app.use((_req, res) => {
   res.status(404).json({ success: false, errors: ["Route not found."] });
 });
 
-/* ── Start ───────────────────────────────────────────────── */
+/* ── Start server ────────────────────────────────────────── */
 app.listen(PORT, () => {
   console.log(`\n  ✓  Task Manager API running on http://localhost:${PORT}\n`);
 });

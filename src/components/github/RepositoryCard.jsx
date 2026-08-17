@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
-  Star, GitFork, AlertCircle, Eye, Scale,
+  Star, GitFork, AlertCircle, Scale,
   Lock, Unlock, Clock, Copy, Check,
   ExternalLink, ArrowRight,
 } from "lucide-react";

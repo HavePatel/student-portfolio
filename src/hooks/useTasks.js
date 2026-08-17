@@ -8,61 +8,119 @@ import {
 
 /**
  * useTasks()
- * Central state manager for the Task Manager feature.
- * Components consume this hook — they never call taskApi directly.
+ * Central state management hook for the Task Manager feature (Practical 6).
  *
- * Returns:
- *   tasks, loading, error,
- *   fetchTasks, createTask, updateTask, deleteTask
+ * Provides:
+ *   - State: tasks, loading, error, creating, updating, deleting
+ *   - Operations: fetchTasks, createTask, updateTask, deleteTask
+ *   - State synchronization with MongoDB backend responses
  */
 export function useTasks() {
-  const [tasks,   setTasks]   = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState(null);
+  const [error, setError] = useState(null);
 
-  /* ── Fetch ─────────────────────────────────── */
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState(null);
+
+  const [updating, setUpdating] = useState(false);
+  const [updateError, setUpdateError] = useState(null);
+
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+
+  /* ── 1. Read: Fetch all tasks ──────────────────────────────── */
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const res = await getTasks();
-      setTasks(res.data ?? []);
+      setTasks(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      setError(err.message ?? "Failed to load tasks.");
+      setError(
+        err.message ||
+          "Unable to load tasks. Please check that the backend is running."
+      );
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { fetchTasks(); }, [fetchTasks]);
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
-  /* ── Create ────────────────────────────────── */
+  /* ── 2. Create: POST /tasks ────────────────────────────────── */
   const createTask = useCallback(async (payload) => {
-    const res = await apiCreate(payload);   // throws on error
-    setTasks((prev) => [res.data, ...prev]);
-    return res.data;
+    setCreating(true);
+    setCreateError(null);
+    try {
+      const res = await apiCreate(payload);
+      const newTask = res.data;
+      // Synchronize React state with actual server response
+      setTasks((prev) => [newTask, ...prev]);
+      return newTask;
+    } catch (err) {
+      setCreateError(err.message || "Failed to create task.");
+      throw err;
+    } finally {
+      setCreating(false);
+    }
   }, []);
 
-  /* ── Update ────────────────────────────────── */
+  /* ── 3. Update: PUT /tasks/:id ─────────────────────────────── */
   const updateTask = useCallback(async (id, payload) => {
-    const res = await apiUpdate(id, payload);  // throws on error
-    setTasks((prev) => prev.map((t) => (t.id === id ? res.data : t)));
-    return res.data;
+    setUpdating(true);
+    setUpdateError(null);
+    try {
+      const res = await apiUpdate(id, payload);
+      const updatedTask = res.data;
+      // Synchronize React state with actual server response
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === id || t._id === id ? { ...t, ...updatedTask } : t
+        )
+      );
+      return updatedTask;
+    } catch (err) {
+      setUpdateError(err.message || "Failed to update task.");
+      throw err;
+    } finally {
+      setUpdating(false);
+    }
   }, []);
 
-  /* ── Delete ────────────────────────────────── */
+  /* ── 4. Delete: DELETE /tasks/:id ──────────────────────────── */
   const deleteTask = useCallback(async (id) => {
-    await apiDelete(id);   // throws on error
-    setTasks((prev) => prev.filter((t) => t.id !== id));
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await apiDelete(id);
+      // Synchronize React state after successful deletion
+      setTasks((prev) => prev.filter((t) => t.id !== id && t._id !== id));
+    } catch (err) {
+      setDeleteError(err.message || "Failed to delete task.");
+      throw err;
+    } finally {
+      setDeleting(false);
+    }
   }, []);
 
   return {
     tasks,
     loading,
     error,
+    creating,
+    createError,
+    updating,
+    updateError,
+    deleting,
+    deleteError,
     fetchTasks,
     createTask,
     updateTask,
     deleteTask,
   };
 }
+
+export default useTasks;

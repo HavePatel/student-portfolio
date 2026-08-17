@@ -1,12 +1,18 @@
-import TaskCard    from "./TaskCard";
-import EmptyState  from "./EmptyState";
+import TaskCard from "./TaskCard";
+import EmptyState from "./EmptyState";
 
 /**
  * TaskList
- * Renders the grid of TaskCards.
- * Delegates empty-state display.
+ * Renders the responsive grid of TaskCards or delegates to EmptyState.
  */
-function TaskList({ tasks, allTasks, onEdit, onDelete, onClearFilters }) {
+function TaskList({
+  tasks,
+  allTasks,
+  onEdit,
+  onDelete,
+  onToggleStatus,
+  onClearFilters,
+}) {
   const isFiltered = tasks.length !== allTasks.length;
 
   if (tasks.length === 0) {
@@ -25,10 +31,11 @@ function TaskList({ tasks, allTasks, onEdit, onDelete, onClearFilters }) {
     >
       {tasks.map((task) => (
         <TaskCard
-          key={task.id}
+          key={task.id || task._id}
           task={task}
           onEdit={onEdit}
           onDelete={onDelete}
+          onToggleStatus={onToggleStatus}
         />
       ))}
     </div>

@@ -1,56 +1,66 @@
 import { useState } from "react";
 import { PlusCircle, Loader2 } from "lucide-react";
 
-const INITIAL = { title: "", description: "", status: "pending" };
+const INITIAL_STATE = {
+  title: "",
+  description: "",
+  completed: false,
+};
 
 /**
  * TaskForm
- * Inline card form for creating new tasks.
- * Validates client-side before calling onSubmit(payload).
+ * Form for creating new tasks in MongoDB via Express POST /tasks.
+ * Supports Title (required), Description (optional), and Completed status.
  */
-function TaskForm({ onSubmit }) {
-  const [fields,   setFields]   = useState(INITIAL);
-  const [errors,   setErrors]   = useState({});
-  const [loading,  setLoading]  = useState(false);
+function TaskForm({ onSubmit, loading: externalLoading }) {
+  const [fields, setFields] = useState(INITIAL_STATE);
+  const [errors, setErrors] = useState({});
+  const [loadingInternal, setLoadingInternal] = useState(false);
   const [apiError, setApiError] = useState("");
 
-  /* ── Field change ─────────────────────────── */
+  const isLoading = externalLoading || loadingInternal;
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFields((prev) => ({ ...prev, [name]: value }));
-    // Clear field-level error on edit
+    const { name, value, type, checked } = e.target;
+    const val = type === "checkbox" ? checked : value;
+    setFields((prev) => ({ ...prev, [name]: val }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
 
-  /* ── Validation ───────────────────────────── */
   const validate = () => {
     const errs = {};
-    if (!fields.title.trim())       errs.title       = "Title is required.";
-    if (!fields.description.trim()) errs.description = "Description is required.";
+    if (!fields.title.trim()) {
+      errs.title = "Task title is required.";
+    }
     return errs;
   };
 
-  /* ── Submit ───────────────────────────────── */
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      return;
+    }
 
-    setLoading(true);
+    setLoadingInternal(true);
     setApiError("");
+
     try {
       await onSubmit({
-        title:       fields.title.trim(),
+        title: fields.title.trim(),
         description: fields.description.trim(),
-        status:      fields.status,
+        completed: Boolean(fields.completed),
+        status: fields.completed ? "completed" : "pending",
       });
-      setFields(INITIAL);
+      // Clear form on success
+      setFields(INITIAL_STATE);
       setErrors({});
     } catch (err) {
-      setApiError(err.message ?? "Failed to create task.");
+      setApiError(err.message || "Failed to create task.");
     } finally {
-      setLoading(false);
+      setLoadingInternal(false);
     }
   };
 
@@ -59,14 +69,16 @@ function TaskForm({ onSubmit }) {
       <h2 className="task-form-card__title">New Task</h2>
 
       {apiError && (
-        <div className="task-api-error" role="alert">{apiError}</div>
+        <div className="task-api-error" role="alert">
+          {apiError}
+        </div>
       )}
 
       <form onSubmit={handleSubmit} noValidate>
-        {/* Title */}
+        {/* Title (Required) */}
         <div className="task-field">
           <label htmlFor="task-title" className="task-label">
-            Title <span aria-hidden="true">*</span>
+            Task Title <span aria-hidden="true">*</span>
           </label>
           <input
             id="task-title"
@@ -75,7 +87,7 @@ function TaskForm({ onSubmit }) {
             className={`task-input${errors.title ? " task-input--error" : ""}`}
             value={fields.title}
             onChange={handleChange}
-            placeholder="Enter task title…"
+            placeholder="e.g. Complete Practical 6"
             autoComplete="off"
             maxLength={120}
             aria-describedby={errors.title ? "task-title-err" : undefined}
@@ -88,55 +100,53 @@ function TaskForm({ onSubmit }) {
           )}
         </div>
 
-        {/* Description */}
+        {/* Description (Optional) */}
         <div className="task-field">
           <label htmlFor="task-desc" className="task-label">
-            Description <span aria-hidden="true">*</span>
+            Description <span className="task-label-opt">(optional)</span>
           </label>
           <textarea
             id="task-desc"
             name="description"
-            className={`task-textarea${errors.description ? " task-input--error" : ""}`}
+            className="task-textarea"
             value={fields.description}
             onChange={handleChange}
-            placeholder="Describe the task…"
+            placeholder="Add task notes or details…"
             rows={3}
             maxLength={500}
-            aria-describedby={errors.description ? "task-desc-err" : undefined}
-            aria-invalid={!!errors.description}
           />
-          {errors.description && (
-            <span id="task-desc-err" className="task-field-error" role="alert">
-              {errors.description}
-            </span>
-          )}
         </div>
 
-        {/* Status */}
-        <div className="task-field">
-          <label htmlFor="task-status" className="task-label">Status</label>
-          <select
-            id="task-status"
-            name="status"
-            className="task-select"
-            value={fields.status}
-            onChange={handleChange}
-          >
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
-          </select>
+        {/* Completed status checkbox */}
+        <div className="task-field task-field--checkbox">
+          <label className="task-checkbox-label">
+            <input
+              type="checkbox"
+              name="completed"
+              checked={fields.completed}
+              onChange={handleChange}
+              className="task-checkbox"
+            />
+            <span>Mark as Completed initially</span>
+          </label>
         </div>
 
+        {/* Submit button */}
         <button
           type="submit"
           className="task-btn task-btn--primary task-btn--full"
-          disabled={loading}
-          aria-busy={loading}
+          disabled={isLoading}
+          aria-busy={isLoading}
         >
-          {loading
-            ? <><Loader2 size={16} strokeWidth={2} className="task-spin" /> Creating…</>
-            : <><PlusCircle size={16} strokeWidth={2} /> Create Task</>
-          }
+          {isLoading ? (
+            <>
+              <Loader2 size={16} className="task-spin" /> Creating…
+            </>
+          ) : (
+            <>
+              <PlusCircle size={16} /> Create Task
+            </>
+          )}
         </button>
       </form>
     </div>

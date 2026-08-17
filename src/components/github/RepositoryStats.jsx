@@ -39,7 +39,7 @@ function StatCard({ icon, label, value, sub }) {
  */
 function RepositoryStats({ repo, languages }) {
   const {
-    stargazers_count, forks_count, watchers_count, subscribers_count,
+    stargazers_count, forks_count, watchers_count,
     open_issues_count, size, license, default_branch, created_at,
     updated_at, homepage,
   } = repo;

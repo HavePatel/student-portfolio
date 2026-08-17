@@ -48,8 +48,9 @@ function App() {
             <Route path="/github/:username"              element={<GithubPage />}           />
             <Route path="/github/:username/:repoName"    element={<RepositoryDetailPage />} />
 
-            {/* ── Task Manager (Practical 4 — temporary) ───── */}
+            {/* ── Task Manager (Practical 6 Full-Stack Integration) ───── */}
             <Route path="/tasks" element={<TaskManagerPage />} />
+            <Route path="/task-manager" element={<TaskManagerPage />} />
 
             {/* ── 404 ───────────────────────────────────────── */}
             <Route path="*" element={<NotFound />} />
