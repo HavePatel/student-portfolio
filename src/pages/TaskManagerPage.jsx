@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { RefreshCw, WifiOff } from "lucide-react";
+import { Link } from "react-router-dom";
+import { RefreshCw, WifiOff, Lock, LogIn, UserPlus } from "lucide-react";
 
 import Container from "../components/ui/Container";
 import TaskForm from "../components/task/TaskForm";
@@ -10,8 +11,10 @@ import ConfirmDialog from "../components/task/ConfirmDialog";
 import LoadingState from "../components/task/LoadingState";
 import { useTasks } from "../hooks/useTasks";
 import { useToast } from "../hooks/useToast";
+import { useAuth } from "../hooks/useAuth";
 
 import "../styles/task.css";
+import "../styles/auth.css";
 
 /* ── Tech badges shown in hero ───────────────────────────── */
 const TECH_BADGES = [
@@ -20,7 +23,9 @@ const TECH_BADGES = [
   "Express",
   "MongoDB",
   "Mongoose",
-  "REST API",
+  "JWT Auth",
+  "bcryptjs",
+  "Middleware",
   "CRUD",
 ];
 
@@ -78,8 +83,55 @@ function ErrorBanner({ message, onRetry }) {
   );
 }
 
+/* ── Auth Required Prompt ────────────────────────────────── */
+function AuthRequiredPrompt() {
+  return (
+    <div className="auth-card" style={{ margin: "2rem auto", textAlign: "center" }}>
+      <div
+        style={{
+          width: "56px",
+          height: "56px",
+          borderRadius: "50%",
+          background: "rgba(217, 119, 6, 0.1)",
+          color: "var(--tan)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 1.25rem",
+        }}
+      >
+        <Lock size={28} />
+      </div>
+      <h2 className="auth-title" style={{ fontSize: "1.4rem" }}>
+        Authentication Required
+      </h2>
+      <p className="auth-subtitle" style={{ marginBottom: "1.75rem" }}>
+        Protected Task Manager API requires a valid JWT token. Please sign in or create an account to manage tasks.
+      </p>
+      <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+        <Link to="/login" className="auth-submit-btn" style={{ textDecoration: "none" }}>
+          <LogIn size={16} /> Sign In
+        </Link>
+        <Link
+          to="/register"
+          className="auth-submit-btn"
+          style={{
+            textDecoration: "none",
+            background: "var(--surface)",
+            color: "var(--text)",
+            borderColor: "var(--border)",
+          }}
+        >
+          <UserPlus size={16} /> Register
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 /* ── TaskManagerPage ─────────────────────────────────────── */
 function TaskManagerPage() {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const {
     tasks,
     loading,
@@ -188,11 +240,11 @@ function TaskManagerPage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div className="task-hero">
         <Container>
-          <p className="task-hero__eyebrow">TASK MANAGER</p>
-          <h1 className="task-hero__headline">Full-Stack CRUD Demo</h1>
+          <p className="task-hero__eyebrow">PRACTICAL 7 — AUTH & MIDDLEWARE PIPELINE</p>
+          <h1 className="task-hero__headline">Authenticated Task Manager</h1>
           <p className="task-hero__sub">
-            A full-stack task management application powered by React, Node.js,
-            Express, and MongoDB.
+            Full-stack task application powered by React, Node.js, Express, MongoDB,
+            bcryptjs password hashing, and JWT Middleware Pipeline.
           </p>
           <div className="task-hero__badges" aria-label="Technologies used">
             {TECH_BADGES.map((b) => (
@@ -207,43 +259,51 @@ function TaskManagerPage() {
       {/* ── Body ─────────────────────────────────────────────── */}
       <div className="task-body">
         <Container>
-          {/* Error banner for GET failures */}
-          {error && !loading && (
-            <ErrorBanner message={error} onRetry={fetchTasks} />
-          )}
-
-          <div className="task-layout">
-            {/* ── LEFT: form + stats ──────────── */}
-            <aside className="task-sidebar">
-              <TaskForm onSubmit={handleCreateTask} loading={creating} />
-              {!loading && tasks.length > 0 && <StatsBar tasks={tasks} />}
-            </aside>
-
-            {/* ── RIGHT: filters + list ───────── */}
-            <main className="task-main" aria-label="Task list">
-              <TaskFilters
-                search={search}
-                onSearchChange={setSearch}
-                status={statusFilter}
-                onStatusChange={setStatusFilter}
-                totalCount={tasks.length}
-                filteredCount={filtered.length}
-              />
-
-              {loading ? (
-                <LoadingState count={3} />
-              ) : (
-                <TaskList
-                  tasks={filtered}
-                  allTasks={tasks}
-                  onEdit={setEditingTask}
-                  onDelete={setTaskToDelete}
-                  onToggleStatus={handleToggleStatus}
-                  onClearFilters={resetFilters}
-                />
+          {authLoading ? (
+            <LoadingState count={3} />
+          ) : !isAuthenticated ? (
+            <AuthRequiredPrompt />
+          ) : (
+            <>
+              {/* Error banner for GET failures */}
+              {error && !loading && (
+                <ErrorBanner message={error} onRetry={fetchTasks} />
               )}
-            </main>
-          </div>
+
+              <div className="task-layout">
+                {/* ── LEFT: form + stats ──────────── */}
+                <aside className="task-sidebar">
+                  <TaskForm onSubmit={handleCreateTask} loading={creating} />
+                  {!loading && tasks.length > 0 && <StatsBar tasks={tasks} />}
+                </aside>
+
+                {/* ── RIGHT: filters + list ───────── */}
+                <main className="task-main" aria-label="Task list">
+                  <TaskFilters
+                    search={search}
+                    onSearchChange={setSearch}
+                    status={statusFilter}
+                    onStatusChange={setStatusFilter}
+                    totalCount={tasks.length}
+                    filteredCount={filtered.length}
+                  />
+
+                  {loading ? (
+                    <LoadingState count={3} />
+                  ) : (
+                    <TaskList
+                      tasks={filtered}
+                      allTasks={tasks}
+                      onEdit={setEditingTask}
+                      onDelete={setTaskToDelete}
+                      onToggleStatus={handleToggleStatus}
+                      onClearFilters={resetFilters}
+                    />
+                  )}
+                </main>
+              </div>
+            </>
+          )}
         </Container>
       </div>
 

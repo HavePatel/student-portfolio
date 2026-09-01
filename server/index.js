@@ -1,13 +1,18 @@
 /**
  * server/index.js
- * Express REST API for Student Portfolio Task Manager (Practical 6)
+ * Express REST API for Student Portfolio Task Manager & Authentication (Practical 7)
  * Backed by MongoDB via Mongoose.
  *
- * Routes:
+ * Auth Routes:
+ *   POST   /register       — Register new user with bcrypt password hashing
+ *   POST   /login          — User login & JWT issuance
+ *   GET    /me             — Safe current user profile (protected)
+ *
+ * Task Routes (Protected by JWT Auth Middleware & Validation Pipeline):
  *   GET    /tasks          — fetch all tasks from MongoDB
- *   POST   /tasks          — create a task in MongoDB
- *   PUT    /tasks/:id      — update a task by MongoDB _id
- *   DELETE /tasks/:id      — delete a task by MongoDB _id
+ *   POST   /tasks          — create a task in MongoDB (validated)
+ *   PUT    /tasks/:id      — update a task by MongoDB _id (validated)
+ *   DELETE /tasks/:id      — delete a task by MongoDB _id (validated)
  *   GET    /health         — health & DB connection check
  *
  * Run:  node server/index.js   (from project root)
@@ -18,13 +23,26 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 import Task from "./models/Task.js";
+import User from "./models/User.js";
+import auth from "./middleware/auth.js";
+import {
+  validateRegister,
+  validateLogin,
+  validateCreateTask,
+  validateUpdateTask,
+  validateTaskId,
+} from "./middleware/validation.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 5000;
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/student_portfolio";
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+const JWT_SECRET = process.env.JWT_SECRET || "fallback_jwt_secret";
 
 /* ── MongoDB Connection ──────────────────────────────────── */
 mongoose
@@ -44,7 +62,7 @@ app.use(
   cors({
     origin: CLIENT_ORIGIN,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(express.json());
@@ -70,10 +88,121 @@ app.get("/health", (_req, res) => {
   });
 });
 
-/* ── Routes ──────────────────────────────────────────────── */
+/* ── Auth Endpoints ──────────────────────────────────────── */
+
+// POST /register — Register a new user
+app.post("/register", validateRegister, async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Check duplicate user
+    const existingUser = await User.findOne({ email: normalizedEmail });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        errors: ["A user with this email address already exists."],
+      });
+    }
+
+    // Hash password with bcryptjs
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create user
+    await User.create({
+      email: normalizedEmail,
+      password: hashedPassword,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+    });
+  } catch (err) {
+    console.error("Error registering user:", err);
+    res.status(500).json({
+      success: false,
+      errors: [err.message || "Failed to register user."],
+    });
+  }
+});
+
+// POST /login — Login & issue JWT token
+app.post("/login", validateLogin, async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Find user
+    const user = await User.findOne({ email: normalizedEmail });
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        errors: ["Invalid email or password."],
+      });
+    }
+
+    // Compare password hash
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        errors: ["Invalid email or password."],
+      });
+    }
+
+    // Generate JWT
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user._id.toString(),
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    console.error("Error during login:", err);
+    res.status(500).json({
+      success: false,
+      errors: [err.message || "Failed to log in."],
+    });
+  }
+});
+
+// GET /me — Safe profile endpoint (Protected)
+app.get("/me", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        errors: ["User not found."],
+      });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        id: user._id.toString(),
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    console.error("Error fetching user profile:", err);
+    res.status(500).json({
+      success: false,
+      errors: [err.message || "Failed to fetch user info."],
+    });
+  }
+});
+
+/* ── Task Routes (Protected by auth & validation pipeline) ── */
 
 // GET /tasks — fetch all tasks (newest first)
-app.get("/tasks", async (_req, res) => {
+app.get("/tasks", auth, async (_req, res) => {
   try {
     const tasks = await Task.find().sort({ createdAt: -1 });
     res.json({ success: true, data: tasks, count: tasks.length });
@@ -87,15 +216,9 @@ app.get("/tasks", async (_req, res) => {
 });
 
 // POST /tasks — create a new task
-app.post("/tasks", async (req, res) => {
+app.post("/tasks", auth, validateCreateTask, async (req, res) => {
   try {
     const { title, description = "", status, completed } = req.body;
-
-    if (!title || !title.trim()) {
-      return res
-        .status(400)
-        .json({ success: false, errors: ["Title is required."] });
-    }
 
     const isCompleted =
       completed !== undefined ? Boolean(completed) : status === "completed";
@@ -125,84 +248,65 @@ app.post("/tasks", async (req, res) => {
 });
 
 // PUT /tasks/:id — update an existing task
-app.put("/tasks/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
+app.put(
+  "/tasks/:id",
+  auth,
+  validateTaskId,
+  validateUpdateTask,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title, description, status, completed } = req.body;
+      const updateData = {};
 
-    // Validate MongoDB ObjectId format
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res
-        .status(400)
-        .json({ success: false, errors: ["Invalid task ID format."] });
-    }
+      if (title !== undefined) {
+        updateData.title = title.trim();
+      }
 
-    const { title, description, status, completed } = req.body;
-    const updateData = {};
+      if (description !== undefined) {
+        updateData.description =
+          typeof description === "string" ? description.trim() : "";
+      }
 
-    if (title !== undefined) {
-      if (!title.trim()) {
+      if (completed !== undefined) {
+        updateData.completed = Boolean(completed);
+        updateData.status = updateData.completed ? "completed" : "pending";
+      }
+
+      if (status !== undefined) {
+        updateData.status = status;
+        if (completed === undefined) {
+          updateData.completed = status === "completed";
+        }
+      }
+
+      const task = await Task.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
+      });
+
+      if (!task) {
         return res
-          .status(400)
-          .json({ success: false, errors: ["Title cannot be empty."] });
+          .status(404)
+          .json({ success: false, errors: ["Task not found."] });
       }
-      updateData.title = title.trim();
+
+      res.json({ success: true, data: task });
+    } catch (err) {
+      console.error("Error updating task:", err);
+      const errors =
+        err.name === "ValidationError"
+          ? Object.values(err.errors).map((e) => e.message)
+          : [err.message || "Failed to update task."];
+      res.status(400).json({ success: false, errors });
     }
-
-    if (description !== undefined) {
-      updateData.description = typeof description === "string" ? description.trim() : "";
-    }
-
-    if (completed !== undefined) {
-      updateData.completed = Boolean(completed);
-      updateData.status = updateData.completed ? "completed" : "pending";
-    }
-
-    if (status !== undefined) {
-      if (!["pending", "completed"].includes(status)) {
-        return res.status(400).json({
-          success: false,
-          errors: ["Status must be 'pending' or 'completed'."],
-        });
-      }
-      updateData.status = status;
-      if (completed === undefined) {
-        updateData.completed = status === "completed";
-      }
-    }
-
-    const task = await Task.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!task) {
-      return res
-        .status(404)
-        .json({ success: false, errors: ["Task not found."] });
-    }
-
-    res.json({ success: true, data: task });
-  } catch (err) {
-    console.error("Error updating task:", err);
-    const errors =
-      err.name === "ValidationError"
-        ? Object.values(err.errors).map((e) => e.message)
-        : [err.message || "Failed to update task."];
-    res.status(400).json({ success: false, errors });
   }
-});
+);
 
 // DELETE /tasks/:id — delete a task
-app.delete("/tasks/:id", async (req, res) => {
+app.delete("/tasks/:id", auth, validateTaskId, async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Validate MongoDB ObjectId format
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res
-        .status(400)
-        .json({ success: false, errors: ["Invalid task ID format."] });
-    }
 
     const task = await Task.findByIdAndDelete(id);
 

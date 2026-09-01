@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import { AuthProvider } from "./context/AuthContext";
 
 // Eagerly loaded (above-fold)
 import Home from "./pages/Home";
@@ -15,6 +16,8 @@ const ContactPage           = lazy(() => import("./pages/ContactPage"));
 const GithubPage            = lazy(() => import("./pages/GithubPage"));
 const RepositoryDetailPage  = lazy(() => import("./pages/RepositoryDetailPage"));
 const TaskManagerPage       = lazy(() => import("./pages/TaskManagerPage"));
+const LoginPage             = lazy(() => import("./pages/LoginPage"));
+const RegisterPage          = lazy(() => import("./pages/RegisterPage"));
 const NotFound              = lazy(() => import("./pages/NotFound"));
 
 function PageLoader() {
@@ -27,7 +30,7 @@ function PageLoader() {
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <Header />
 
       <main>
@@ -41,14 +44,15 @@ function App() {
             <Route path="/contact"    element={<ContactPage />}   />
 
             {/* ── GitHub Explorer routes ────────────────────── */}
-            {/* /github           → Explorer with default user (HavePatel) */}
-            {/* /github/:username → Explorer for any user                  */}
-            {/* /github/:username/:repoName → Repository detail            */}
             <Route path="/github"                        element={<GithubPage />}           />
             <Route path="/github/:username"              element={<GithubPage />}           />
             <Route path="/github/:username/:repoName"    element={<RepositoryDetailPage />} />
 
-            {/* ── Task Manager (Practical 6 Full-Stack Integration) ───── */}
+            {/* ── Authentication routes (Practical 7) ──────── */}
+            <Route path="/login"    element={<LoginPage />}    />
+            <Route path="/register" element={<RegisterPage />} />
+
+            {/* ── Task Manager (Practical 7 Authenticated Full-Stack Integration) ───── */}
             <Route path="/tasks" element={<TaskManagerPage />} />
             <Route path="/task-manager" element={<TaskManagerPage />} />
 
@@ -59,7 +63,7 @@ function App() {
       </main>
 
       <Footer />
-    </>
+    </AuthProvider>
   );
 }
 

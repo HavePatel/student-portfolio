@@ -1,7 +1,11 @@
 /**
  * taskApi.js
- * Central API service layer for Task Manager operations (Practical 6).
+ * Central API service layer for Task Manager operations (Practical 6 + Practical 7).
  * Connects the React frontend to the Node + Express + MongoDB backend.
+ *
+ * Automatically attaches Authorization: Bearer <token> for protected requests.
+ * Handles 401 Unauthorized responses by clearing stored tokens and dispatching
+ * session expiration events to the application layer.
  */
 
 const BASE_URL =
@@ -9,16 +13,21 @@ const BASE_URL =
   import.meta.env.VITE_API_URL ||
   "http://localhost:5000";
 
-/* ── Internal fetch wrapper ───────────────────────────────── */
+/* ── Internal fetch wrapper with JWT header injection & 401 handling ────── */
 async function apiFetch(path, options = {}) {
+  const token = localStorage.getItem("token");
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...options.headers,
+  };
+
   let res;
   try {
     res = await fetch(`${BASE_URL}${path}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
       ...options,
+      headers,
     });
   } catch {
     const error = new Error(
@@ -32,6 +41,12 @@ async function apiFetch(path, options = {}) {
   const json = await res.json().catch(() => ({}));
 
   if (!res.ok) {
+    if (res.status === 401) {
+      // Clear token on 401 Unauthorized (expired or invalid token)
+      localStorage.removeItem("token");
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+    }
+
     const message =
       json.errors?.[0] ||
       json.message ||

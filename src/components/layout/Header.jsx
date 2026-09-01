@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { Menu, X, LogOut, User as UserIcon } from "lucide-react";
 import Container from "../ui/Container";
 import ThemeToggle from "../ui/ThemeToggle";
+import { useAuth } from "../../hooks/useAuth";
+import { useToast } from "../../hooks/useToast";
 import "../../styles/header.css";
+import "../../styles/auth.css";
 
 const NAV_ITEMS = [
   { label: "Home",      to: "/"          },
@@ -18,6 +21,10 @@ const NAV_ITEMS = [
 function Header() {
   const [scrolled,  setScrolled]  = useState(false);
   const [menuOpen,  setMenuOpen]  = useState(false);
+
+  const { isAuthenticated, user, logout } = useAuth();
+  const { showToast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -38,6 +45,13 @@ function Header() {
   }, [menuOpen]);
 
   const close = () => setMenuOpen(false);
+
+  const handleLogout = () => {
+    logout();
+    showToast("Logged out successfully.", "info");
+    close();
+    navigate("/login");
+  };
 
   return (
     <header className={`header${scrolled ? " header--scrolled" : ""}`} role="banner">
@@ -67,9 +81,45 @@ function Header() {
             </ul>
           </nav>
 
-          {/* ── Right: theme toggle + hamburger ── */}
-          <div className="nav-right">
+          {/* ── Right: Auth state + theme toggle + hamburger ── */}
+          <div className="nav-right" style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            {isAuthenticated ? (
+              <div className="auth-user-badge" title={user?.email}>
+                <UserIcon size={14} className="text-tan" />
+                <span className="auth-user-email">{user?.email}</span>
+                <button
+                  type="button"
+                  className="auth-logout-btn"
+                  onClick={handleLogout}
+                  title="Logout"
+                  aria-label="Logout"
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <div className="auth-nav-buttons" style={{ display: "flex", gap: "0.5rem" }}>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) => `nav-link${isActive ? " nav-link--active" : ""}`}
+                  style={{ fontSize: "0.85rem" }}
+                  onClick={close}
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/register"
+                  className={({ isActive }) => `nav-link${isActive ? " nav-link--active" : ""}`}
+                  style={{ fontSize: "0.85rem" }}
+                  onClick={close}
+                >
+                  Register
+                </NavLink>
+              </div>
+            )}
+
             <ThemeToggle />
+
             <button
               className="nav-hamburger"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -107,6 +157,30 @@ function Header() {
               </NavLink>
             </li>
           ))}
+          {isAuthenticated ? (
+            <li style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 1rem" }}>
+                <span style={{ fontSize: "0.9rem", color: "var(--text)" }}>{user?.email}</span>
+                <button
+                  type="button"
+                  className="auth-submit-btn"
+                  style={{ padding: "0.4rem 0.8rem", width: "auto", fontSize: "0.85rem" }}
+                  onClick={handleLogout}
+                >
+                  <LogOut size={14} /> Logout
+                </button>
+              </div>
+            </li>
+          ) : (
+            <li style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border)", display: "flex", gap: "1rem", padding: "0 1rem" }}>
+              <NavLink to="/login" className="auth-submit-btn" style={{ textDecoration: "none", textAlign: "center" }} onClick={close}>
+                Login
+              </NavLink>
+              <NavLink to="/register" className="auth-submit-btn" style={{ textDecoration: "none", textAlign: "center", background: "var(--surface)" }} onClick={close}>
+                Register
+              </NavLink>
+            </li>
+          )}
         </ul>
       </nav>
 
