@@ -64,15 +64,21 @@ export const validateLogin = (req, res, next) => {
 
 /**
  * Validates POST /tasks creation payload.
+ * Practical 5 Supplementary: validates optional `priority` field.
  */
 export const validateCreateTask = (req, res, next) => {
-  const { title } = req.body || {};
+  const { title, priority } = req.body || {};
   const errors = [];
 
   if (!title || typeof title !== "string" || !title.trim()) {
     errors.push("Title is required and cannot be empty.");
   } else if (title.trim().length > 120) {
     errors.push("Title cannot exceed 120 characters.");
+  }
+
+  // Practical 5 Supplementary — priority enum validation
+  if (priority !== undefined && !["low", "medium", "high"].includes(priority)) {
+    errors.push("Priority must be 'low', 'medium', or 'high'.");
   }
 
   if (errors.length > 0) {
@@ -84,9 +90,10 @@ export const validateCreateTask = (req, res, next) => {
 
 /**
  * Validates PUT /tasks/:id payload for partial task updates.
+ * Practical 5 Supplementary: validates optional `priority` field.
  */
 export const validateUpdateTask = (req, res, next) => {
-  const { title, description, status, completed } = req.body || {};
+  const { title, description, status, completed, priority } = req.body || {};
   const errors = [];
 
   if (title !== undefined) {
@@ -109,11 +116,17 @@ export const validateUpdateTask = (req, res, next) => {
     }
   }
 
+  // Practical 5 Supplementary — priority enum validation
+  if (priority !== undefined && !["low", "medium", "high"].includes(priority)) {
+    errors.push("Priority must be 'low', 'medium', or 'high'.");
+  }
+
   if (
     title === undefined &&
     description === undefined &&
     status === undefined &&
-    completed === undefined
+    completed === undefined &&
+    priority === undefined
   ) {
     errors.push("At least one valid field must be provided for update.");
   }

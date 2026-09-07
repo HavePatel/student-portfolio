@@ -11,6 +11,7 @@ function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
     title: task?.title ?? "",
     description: task?.description ?? "",
     completed: task?.completed === true || task?.status === "completed",
+    priority: task?.priority ?? "medium",   // Practical 5 Supplementary
   });
   const [errors, setErrors] = useState({});
   const [internalLoading, setInternalLoading] = useState(false);
@@ -31,6 +32,7 @@ function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
         title: task.title ?? "",
         description: task.description ?? "",
         completed: task.completed === true || task.status === "completed",
+        priority: task.priority ?? "medium",   // Practical 5 Supplementary
       });
     }
   }, [task]);
@@ -81,6 +83,7 @@ function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
         description: fields.description.trim(),
         completed: Boolean(fields.completed),
         status: fields.completed ? "completed" : "pending",
+        priority: fields.priority,   // Practical 5 Supplementary
       });
       onClose();
     } catch (err) {
@@ -182,6 +185,25 @@ function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
               />
               <span>Completed</span>
             </label>
+          </div>
+
+          {/* Priority — Practical 5 Supplementary */}
+          <div className="task-field">
+            <label htmlFor="modal-priority" className="task-label">
+              Priority
+            </label>
+            <select
+              id="modal-priority"
+              name="priority"
+              className="task-select"
+              value={fields.priority}
+              onChange={handleChange}
+              aria-label="Task priority"
+            >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
           </div>
 
           {/* Actions */}

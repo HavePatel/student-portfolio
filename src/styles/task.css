@@ -954,3 +954,63 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
+
+/* ================================================
+   PRACTICAL 5 SUPPLEMENTARY — PRIORITY BADGES
+   Three distinct colours using existing design tokens.
+   Visually distinguishable while matching Oxford Blue + Tan system.
+================================================ */
+
+/* Base badge */
+.task-priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 50px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* LOW — muted blue-grey */
+.task-priority-badge--low {
+  background: rgba(100, 116, 139, 0.1);
+  color: #475569;
+  border-color: rgba(100, 116, 139, 0.28);
+}
+
+/* MEDIUM — tan/amber (matches portfolio accent) */
+.task-priority-badge--medium {
+  background: rgba(210, 180, 140, 0.15);
+  color: #92600a;
+  border-color: rgba(210, 180, 140, 0.45);
+}
+
+/* HIGH — red */
+.task-priority-badge--high {
+  background: rgba(220, 38, 38, 0.09);
+  color: #b91c1c;
+  border-color: rgba(220, 38, 38, 0.28);
+}
+
+/* Dark mode adjustments */
+.dark .task-priority-badge--low {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.dark .task-priority-badge--medium {
+  background: rgba(210, 180, 140, 0.1);
+  color: var(--tan);
+  border-color: rgba(210, 180, 140, 0.35);
+}
+
+.dark .task-priority-badge--high {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.3);
+}

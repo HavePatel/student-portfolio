@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   title: "",
   description: "",
   completed: false,
+  priority: "medium",   // Practical 5 Supplementary — default matches schema
 };
 
 /**
@@ -53,6 +54,7 @@ function TaskForm({ onSubmit, loading: externalLoading }) {
         description: fields.description.trim(),
         completed: Boolean(fields.completed),
         status: fields.completed ? "completed" : "pending",
+        priority: fields.priority,   // Practical 5 Supplementary
       });
       // Clear form on success
       setFields(INITIAL_STATE);
@@ -129,6 +131,25 @@ function TaskForm({ onSubmit, loading: externalLoading }) {
             />
             <span>Mark as Completed initially</span>
           </label>
+        </div>
+
+        {/* Priority — Practical 5 Supplementary */}
+        <div className="task-field">
+          <label htmlFor="task-priority" className="task-label">
+            Priority
+          </label>
+          <select
+            id="task-priority"
+            name="priority"
+            className="task-select"
+            value={fields.priority}
+            onChange={handleChange}
+            aria-label="Task priority"
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
         </div>
 
         {/* Submit button */}

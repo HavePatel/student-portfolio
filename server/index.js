@@ -10,6 +10,7 @@
  *
  * Task Routes (Protected by JWT Auth Middleware & Validation Pipeline):
  *   GET    /tasks          — fetch all tasks from MongoDB
+ *   GET    /tasks/:id      — fetch a single task by MongoDB ObjectId (P5 Supplementary)
  *   POST   /tasks          — create a task in MongoDB (validated)
  *   PUT    /tasks/:id      — update a task by MongoDB _id (validated)
  *   DELETE /tasks/:id      — delete a task by MongoDB _id (validated)
@@ -215,10 +216,45 @@ app.get("/tasks", auth, async (_req, res) => {
   }
 });
 
+/*
+ * GET /tasks/:id — fetch a single task by MongoDB ObjectId
+ * Practical 5 Supplementary Requirement
+ *
+ * Responses:
+ *   200  task found          { success: true,  data: task }
+ *   400  invalid ObjectId    { success: false, errors: ["Invalid task ID"] }
+ *   401  no / bad JWT        (handled by auth middleware)
+ *   404  valid ID, no doc    { success: false, errors: ["Task not found"] }
+ *   500  database error
+ *
+ * ObjectId validation is handled by the existing validateTaskId middleware
+ * which already returns 400 for malformed IDs, so no duplication here.
+ */
+app.get("/tasks/:id", auth, validateTaskId, async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        errors: ["Task not found."],
+      });
+    }
+
+    res.json({ success: true, data: task });
+  } catch (err) {
+    console.error("Error fetching task by ID:", err);
+    res.status(500).json({
+      success: false,
+      errors: [err.message || "Failed to fetch task."],
+    });
+  }
+});
+
 // POST /tasks — create a new task
 app.post("/tasks", auth, validateCreateTask, async (req, res) => {
   try {
-    const { title, description = "", status, completed } = req.body;
+    const { title, description = "", status, completed, priority } = req.body;
 
     const isCompleted =
       completed !== undefined ? Boolean(completed) : status === "completed";
@@ -234,6 +270,8 @@ app.post("/tasks", auth, validateCreateTask, async (req, res) => {
       description: typeof description === "string" ? description.trim() : "",
       completed: isCompleted,
       status: finalStatus,
+      // Practical 5 Supplementary — persist priority (defaults to 'medium' via schema)
+      ...(priority !== undefined && { priority }),
     });
 
     res.status(201).json({ success: true, data: task });
@@ -256,7 +294,7 @@ app.put(
   async (req, res) => {
     try {
       const { id } = req.params;
-      const { title, description, status, completed } = req.body;
+      const { title, description, status, completed, priority } = req.body;
       const updateData = {};
 
       if (title !== undefined) {
@@ -278,6 +316,11 @@ app.put(
         if (completed === undefined) {
           updateData.completed = status === "completed";
         }
+      }
+
+      // Practical 5 Supplementary — allow priority updates
+      if (priority !== undefined) {
+        updateData.priority = priority;
       }
 
       const task = await Task.findByIdAndUpdate(id, updateData, {

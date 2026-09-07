@@ -69,6 +69,21 @@ async function apiFetch(path, options = {}) {
 export const getTasks = () => apiFetch("/tasks");
 
 /**
+ * Fetch a single task by MongoDB ObjectId.
+ * Practical 5 Supplementary Requirement.
+ *
+ * Possible responses from the server:
+ *   200  { success: true,  data: task }           — task found
+ *   400  { success: false, errors: [...] }         — invalid ObjectId
+ *   401  { success: false, errors: [...] }         — no / expired JWT
+ *   404  { success: false, errors: ["Task not found."] } — valid ID, no doc
+ *
+ * @param {string} id  MongoDB ObjectId string
+ * @returns {Promise<{ success: boolean, data: Object }>}
+ */
+export const getTaskById = (id) => apiFetch(`/tasks/${id}`);
+
+/**
  * Create a new task in MongoDB.
  * @param {{ title: string, description?: string, completed?: boolean, status?: string }} payload
  * @returns {Promise<{ success: boolean, data: Object }>}

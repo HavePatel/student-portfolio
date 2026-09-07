@@ -228,3 +228,127 @@ section{
   box-shadow: 0 16px 40px var(--card-shadow) !important;
   border-color: rgba(210, 180, 140, 0.5) !important;
 }
+
+
+/* ================================================
+   PRACTICAL 8 — PAGE LOADER
+   Suspense fallback for lazy-loaded routes.
+   Uses existing Oxford Blue / Tan design tokens.
+   Spinner enforces 300ms minimum visibility.
+================================================ */
+
+.page-loader {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 80px 24px;
+  background: var(--bg);
+}
+
+/* Ring spinner — two concentric tracks */
+.page-loader__spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  /* Outer track (faint tan) */
+  border: 3px solid rgba(210, 180, 140, 0.18);
+
+  /* Sweeping arc (solid tan) */
+  border-top-color: var(--tan);
+
+  animation: page-loader-spin 0.75s linear infinite;
+  will-change: transform;
+}
+
+@keyframes page-loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+.page-loader__text {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+/* ================================================
+   PRACTICAL 8 — LAZY ERROR BOUNDARY
+   Shown when a lazy-loaded chunk fails to download.
+   Must match the portfolio's existing design system.
+================================================ */
+
+.lazy-error {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  background: var(--bg);
+}
+
+.lazy-error__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  max-width: 420px;
+}
+
+.lazy-error__code {
+  font-size: 2.8rem;
+  line-height: 1;
+  color: var(--tan);
+}
+
+.lazy-error__title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 0;
+}
+
+.lazy-error__desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.lazy-error__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: 1px solid rgba(210, 180, 140, 0.45);
+  background: transparent;
+  color: var(--heading);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease,
+    transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.lazy-error__btn:hover {
+  background: var(--oxford);
+  color: #fff;
+  border-color: var(--oxford);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 33, 71, 0.18);
+}
+
+/* Dark mode — spinner track lightens slightly */
+.dark .page-loader__spinner {
+  border-color: rgba(210, 180, 140, 0.1);
+  border-top-color: var(--tan);
+}

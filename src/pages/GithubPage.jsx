@@ -88,9 +88,26 @@ function GithubPage() {
     setLanguage("all"); setType("all"); setSortBy("updated"); setRepoQuery(""); setPage(1);
   }, []);
 
-  const handleSearch = (val) => {
-    if (val.trim()) navigate(`/github/${val.trim()}`);
-  };
+  /*
+   * Practical 8 — useCallback optimisation
+   *
+   * PROBLEM: handleSearch was a plain arrow function defined inline on
+   * every render. GithubPage re-renders whenever repos/user data arrives
+   * from the API. Each re-render created a NEW function reference for
+   * handleSearch, causing SearchBar (which receives it as a prop) to
+   * also re-render even when the search logic had not changed.
+   *
+   * FIX: useCallback stabilises the reference. `navigate` is the only
+   * dependency and it is stable across renders (React Router guarantee).
+   * SearchBar now receives the same function reference on every render
+   * and can be memoised effectively.
+   */
+  const handleSearch = useCallback(
+    (val) => {
+      if (val.trim()) navigate(`/github/${val.trim()}`);
+    },
+    [navigate]
+  );
 
   const error   = uE || rE;
   const loading = uL || rL;

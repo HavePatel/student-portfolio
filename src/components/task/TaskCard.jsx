@@ -62,6 +62,15 @@ function TaskCard({ task, onEdit, onDelete, onToggleStatus }) {
           )}
         </button>
 
+        {/* Priority badge — Practical 5 Supplementary */}
+        {/* Falls back to 'medium' for existing docs without priority */}
+        <span
+          className={`task-priority-badge task-priority-badge--${task.priority ?? "medium"}`}
+          aria-label={`Priority: ${task.priority ?? "medium"}`}
+        >
+          {(task.priority ?? "medium").toUpperCase()}
+        </span>
+
         {task.id && (
           <span className="task-card__id" title={`MongoDB ID: ${task.id}`}>
             #{String(task.id).slice(-6)}

@@ -1,3 +1,38 @@
+/**
+ * TaskFilters.jsx
+ *
+ * Practical 8 — React DevTools Profiler Finding + Optimisation
+ *
+ * PROBLEM IDENTIFIED (React DevTools Profiler):
+ * TaskManagerPage re-renders whenever any piece of state changes
+ * (e.g. a task is toggled, the edit modal opens/closes, or a toast
+ * fires). Because TaskFilters received all its props as primitives
+ * but was NOT memoised, it re-rendered on EVERY parent re-render —
+ * even when `search`, `status`, `totalCount`, and `filteredCount`
+ * had not changed.
+ *
+ * In the Profiler this appeared as TaskFilters showing a render bar
+ * on EVERY parent commit, including commits triggered by editingTask
+ * or taskToDelete state changes that have nothing to do with filters.
+ *
+ * WHY IT WAS UNNECESSARY:
+ * TaskFilters is a pure presentational component. Its output is
+ * determined solely by its props. When those props are unchanged the
+ * DOM output is identical, so the work is wasted.
+ *
+ * OPTIMISATION APPLIED:
+ * React.memo() wraps the component. React performs a shallow
+ * comparison of props before deciding to re-render. Because all props
+ * are primitives (strings, numbers, functions) and the parent passes
+ * callbacks stabilised with useCallback, React.memo correctly skips
+ * re-renders when nothing relevant has changed.
+ *
+ * RESULT:
+ * TaskFilters now re-renders ONLY when search text, status filter,
+ * or task counts actually change — not on every parent commit.
+ */
+
+import { memo } from "react";
 import { Search, X } from "lucide-react";
 
 const STATUS_FILTERS = [
@@ -6,11 +41,6 @@ const STATUS_FILTERS = [
   { value: "completed", label: "Completed" },
 ];
 
-/**
- * TaskFilters
- * Controlled search input + status filter chips.
- * All state lives in the parent (TaskManagerPage).
- */
 function TaskFilters({
   search,
   onSearchChange,
@@ -81,4 +111,5 @@ function TaskFilters({
   );
 }
 
-export default TaskFilters;
+/* React.memo — skip re-render when props are shallowly equal */
+export default memo(TaskFilters);
