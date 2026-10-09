@@ -5,13 +5,14 @@ const INITIAL_STATE = {
   title: "",
   description: "",
   completed: false,
+  ongoing: false,
   priority: "medium",   // Practical 5 Supplementary — default matches schema
 };
 
 /**
  * TaskForm
  * Form for creating new tasks in MongoDB via Express POST /tasks.
- * Supports Title (required), Description (optional), and Completed status.
+ * Supports Title (required), Description (optional), Initial Status (Completed / Ongoing / Pending), and Priority.
  */
 function TaskForm({ onSubmit, loading: externalLoading }) {
   const [fields, setFields] = useState(INITIAL_STATE);
@@ -23,8 +24,25 @@ function TaskForm({ onSubmit, loading: externalLoading }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const val = type === "checkbox" ? checked : value;
-    setFields((prev) => ({ ...prev, [name]: val }));
+
+    if (type === "checkbox") {
+      if (name === "completed") {
+        setFields((prev) => ({
+          ...prev,
+          completed: checked,
+          ongoing: checked ? false : prev.ongoing,
+        }));
+      } else if (name === "ongoing") {
+        setFields((prev) => ({
+          ...prev,
+          ongoing: checked,
+          completed: checked ? false : prev.completed,
+        }));
+      }
+    } else {
+      setFields((prev) => ({ ...prev, [name]: value }));
+    }
+
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
@@ -48,12 +66,18 @@ function TaskForm({ onSubmit, loading: externalLoading }) {
     setLoadingInternal(true);
     setApiError("");
 
+    const initialStatus = fields.completed
+      ? "completed"
+      : fields.ongoing
+      ? "ongoing"
+      : "pending";
+
     try {
       await onSubmit({
         title: fields.title.trim(),
         description: fields.description.trim(),
         completed: Boolean(fields.completed),
-        status: fields.completed ? "completed" : "pending",
+        status: initialStatus,
         priority: fields.priority,   // Practical 5 Supplementary
       });
       // Clear form on success
@@ -130,6 +154,20 @@ function TaskForm({ onSubmit, loading: externalLoading }) {
               className="task-checkbox"
             />
             <span>Mark as Completed initially</span>
+          </label>
+        </div>
+
+        {/* Ongoing status checkbox — placed directly BELOW completed checkbox */}
+        <div className="task-field task-field--checkbox">
+          <label className="task-checkbox-label">
+            <input
+              type="checkbox"
+              name="ongoing"
+              checked={fields.ongoing}
+              onChange={handleChange}
+              className="task-checkbox"
+            />
+            <span>Mark as Ongoing initially</span>
           </label>
         </div>
 

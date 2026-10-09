@@ -26,6 +26,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required."],
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      select: false,
+    },
   },
   {
     timestamps: true,
@@ -34,6 +47,8 @@ const userSchema = new mongoose.Schema(
       transform: (_doc, ret) => {
         ret.id = ret._id.toString();
         delete ret.password;
+        delete ret.resetPasswordToken;
+        delete ret.resetPasswordExpires;
         delete ret.__v;
         return ret;
       },
@@ -43,6 +58,8 @@ const userSchema = new mongoose.Schema(
       transform: (_doc, ret) => {
         ret.id = ret._id.toString();
         delete ret.password;
+        delete ret.resetPasswordToken;
+        delete ret.resetPasswordExpires;
         delete ret.__v;
         return ret;
       },

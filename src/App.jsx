@@ -71,6 +71,11 @@ const RepositoryDetailPage = lazy(() => import("./pages/RepositoryDetailPage"));
 const TaskManagerPage      = lazy(() => import("./pages/TaskManagerPage"));
 const LoginPage            = lazy(() => import("./pages/LoginPage"));
 const RegisterPage         = lazy(() => import("./pages/RegisterPage"));
+const ForgotPasswordPage   = lazy(() => import("./pages/ForgotPasswordPage"));
+const ResetPasswordPage    = lazy(() => import("./pages/ResetPasswordPage"));
+
+// Admin (RBAC — admin only)
+const AdminPage            = lazy(() => import("./pages/AdminPage"));
 
 // 404
 const NotFound             = lazy(() => import("./pages/NotFound"));
@@ -110,12 +115,17 @@ function App() {
               <Route path="/github/:username/:repoName" element={<RepositoryDetailPage />} />
 
               {/* ── Auth (Practical 7) ───────────────────────── */}
-              <Route path="/login"    element={<LoginPage />}    />
-              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/login"                  element={<LoginPage />}          />
+              <Route path="/register"               element={<RegisterPage />}       />
+              <Route path="/forgot-password"        element={<ForgotPasswordPage />} />
+              <Route path="/reset-password/:token"  element={<ResetPasswordPage />}  />
 
               {/* ── Task Manager (Practical 6 & 7) ──────────── */}
               <Route path="/tasks"        element={<TaskManagerPage />} />
               <Route path="/task-manager" element={<TaskManagerPage />} />
+
+              {/* ── Admin (RBAC — admin only) ────────────────── */}
+              <Route path="/admin" element={<AdminPage />} />
 
               {/* ── 404 ─────────────────────────────────────── */}
               <Route path="*" element={<NotFound />} />

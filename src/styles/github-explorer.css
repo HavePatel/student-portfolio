@@ -920,3 +920,520 @@
   .gh-filters__sort { width: 100%; }
   .gh-filters__select { flex: 1; }
 }
+
+/* ================================================
+   DARK MODE OVERRIDES — GitHub Explorer
+   ================================================ */
+
+.dark .gh-explorer,
+.dark .repo-detail-page {
+  background: var(--bg);
+}
+
+.dark .gh-explorer__hero {
+  background: var(--oxford);
+}
+
+.dark .gh-searchbar__inner {
+  background: transparent;
+}
+
+.dark .gh-searchbar__icon {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.dark .gh-searchbar__input {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .gh-searchbar__input::placeholder {
+  color: var(--text-muted);
+}
+
+.dark .gh-searchbar__input:focus {
+  border-color: var(--tan);
+  background: var(--surface-hover);
+  box-shadow: 0 0 0 4px rgba(217, 184, 135, 0.18);
+}
+
+.dark .gh-searchbar__clear {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.dark .gh-searchbar__clear:hover {
+  color: var(--text);
+}
+
+.dark .gh-searchbar__btn {
+  background: var(--tan);
+  color: var(--oxford);
+}
+
+.dark .gh-searchbar__btn:hover {
+  box-shadow: 0 8px 20px rgba(217, 184, 135, 0.4);
+}
+
+.dark .gh-suggestion {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+.dark .gh-suggestion:hover {
+  background: var(--surface-hover);
+  border-color: var(--tan);
+  color: var(--tan);
+}
+
+.dark .gh-profile-card {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 4px 24px var(--card-shadow);
+}
+
+.dark .gh-profile-card__avatar {
+  border-color: rgba(217, 184, 135, 0.35);
+}
+
+.dark .gh-profile-card__name {
+  color: var(--heading);
+}
+
+.dark .gh-profile-card__login {
+  color: var(--tan);
+}
+
+.dark .gh-profile-card__bio {
+  color: var(--text-secondary);
+}
+
+.dark .gh-profile-card__meta li {
+  color: var(--text-secondary);
+}
+
+.dark .gh-profile-card__meta svg {
+  color: var(--tan);
+}
+
+.dark .gh-profile-card__meta a {
+  color: var(--text);
+}
+
+.dark .gh-profile-card__meta a:hover {
+  opacity: 0.65;
+}
+
+.dark .gh-profile-card__stats {
+  border-color: var(--border);
+}
+
+.dark .gh-profile-card__stats > div {
+  border-color: var(--border);
+}
+
+.dark .gh-profile-card__stats strong {
+  color: var(--heading);
+}
+
+.dark .gh-profile-card__stats span {
+  color: var(--text-secondary);
+}
+
+.dark .gh-filters {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.dark .gh-filters__search svg {
+  color: var(--text-muted);
+}
+
+.dark .gh-filters__search-input {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .gh-filters__search-input:focus {
+  border-color: var(--tan);
+  box-shadow: 0 0 0 3px rgba(217, 184, 135, 0.15);
+}
+
+.dark .gh-filters__search-clear {
+  color: var(--text-muted);
+}
+
+.dark .gh-filters__search-clear:hover {
+  color: var(--text);
+}
+
+.dark .gh-filters__sort {
+  color: var(--text-secondary);
+}
+
+.dark .gh-filters__select {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .gh-filters__select:focus {
+  border-color: var(--tan);
+}
+
+.dark .gh-filters__label {
+  color: var(--text-secondary);
+}
+
+.dark .gh-pill {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.dark .gh-pill:hover {
+  border-color: var(--tan);
+  color: var(--text);
+  background: var(--surface-elevated);
+}
+
+.dark .gh-pill--active {
+  background: var(--oxford);
+  border-color: var(--oxford);
+  color: #fff;
+}
+
+.dark .gh-filters__count {
+  color: var(--text-secondary);
+}
+
+.dark .gh-filters__count strong {
+  color: var(--text);
+}
+
+.dark .repo-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.dark .repo-card:hover {
+  border-color: rgba(217, 184, 135, 0.4);
+  box-shadow: 0 16px 40px var(--card-shadow);
+}
+
+.dark .repo-card:focus-visible {
+  outline-color: var(--tan);
+}
+
+.dark .repo-card__name {
+  color: var(--heading);
+}
+
+.dark .repo-card__name:hover {
+  color: var(--tan);
+}
+
+.dark .repo-badge--fork {
+  background: rgba(217, 184, 135, 0.08);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+.dark .repo-badge--archived {
+  background: rgba(217, 184, 135, 0.15);
+  color: var(--tan);
+  border-color: rgba(217, 184, 135, 0.35);
+}
+
+.dark .repo-vis-icon {
+  color: var(--text-secondary);
+}
+
+.dark .repo-card__desc {
+  color: var(--text-secondary);
+}
+
+.dark .repo-card__no-desc {
+  color: var(--border);
+}
+
+.dark .repo-topic {
+  background: var(--surface-elevated);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+.dark .repo-topic:hover {
+  background: var(--surface-hover);
+}
+
+.dark .repo-lang {
+  color: var(--text);
+}
+
+.dark .repo-stat {
+  color: var(--text-secondary);
+}
+
+.dark .repo-stat--muted {
+  color: var(--border);
+}
+
+.dark .repo-card__footer {
+  border-color: var(--border);
+}
+
+.dark .repo-card__updated {
+  color: var(--text-secondary);
+}
+
+.dark .gh-icon-btn {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.dark .gh-icon-btn:hover {
+  background: var(--surface-elevated);
+  border-color: var(--tan);
+  color: var(--text);
+}
+
+.dark .gh-icon-btn--success {
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.35);
+  color: var(--status-success);
+}
+
+.dark .gh-icon-btn--view {
+  background: var(--oxford);
+  border-color: var(--oxford);
+  color: #fff;
+}
+
+.dark .gh-icon-btn--view:hover {
+  background: #00306e;
+  border-color: #00306e;
+}
+
+.dark .gh-btn {
+  border-color: transparent;
+}
+
+.dark .gh-btn--primary {
+  background: var(--oxford);
+  color: #fff;
+  border-color: var(--oxford);
+}
+
+.dark .gh-btn--primary:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.dark .gh-btn--outline {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.dark .gh-btn--outline:hover {
+  background: var(--surface-elevated);
+  border-color: var(--tan);
+}
+
+.dark .gh-btn--success {
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.35);
+  color: var(--status-success);
+}
+
+.dark .gh-page-btn {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+.dark .gh-page-btn:hover:not(:disabled) {
+  background: var(--surface-elevated);
+  border-color: var(--tan);
+  color: var(--text);
+}
+
+.dark .gh-page-btn--active {
+  background: var(--oxford);
+  border-color: var(--oxford);
+  color: #fff;
+}
+
+.dark .gh-page-btn:disabled {
+  opacity: 0.35;
+}
+
+.dark .gh-page-dots {
+  color: var(--text-secondary);
+}
+
+.dark .gh-pagination__load-more {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.dark .gh-pagination__load-more:hover {
+  background: var(--surface-elevated);
+  border-color: var(--tan);
+  color: var(--text);
+}
+
+.dark .gh-pagination__info {
+  color: var(--text-secondary);
+}
+
+.dark .gh-empty__icon {
+  color: var(--border);
+}
+
+.dark .gh-empty__title {
+  color: var(--heading);
+}
+
+.dark .gh-empty__desc {
+  color: var(--text-secondary);
+}
+
+.dark .gh-empty__reset-btn {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+.dark .gh-empty__reset-btn:hover {
+  background: var(--surface-elevated);
+  border-color: var(--tan);
+}
+
+.dark .gh-error__icon {
+  color: var(--tan);
+}
+
+.dark .gh-error__title {
+  color: var(--heading);
+}
+
+.dark .gh-error__desc {
+  color: var(--text-secondary);
+}
+
+.dark .repo-detail-page {
+  background: var(--bg);
+}
+
+.dark .repo-header__back {
+  color: var(--text-secondary);
+}
+
+.dark .repo-header__back:hover {
+  color: var(--text);
+}
+
+.dark .repo-header__name {
+  color: var(--heading);
+}
+
+.dark .repo-visibility--public {
+  background: rgba(74, 222, 128, 0.12);
+  color: var(--status-completed);
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.dark .repo-visibility--private {
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--status-pending);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.dark .repo-header__full-name {
+  color: var(--text-secondary);
+}
+
+.dark .repo-header__desc {
+  color: var(--text-secondary);
+}
+
+.dark .repo-header__owner-link {
+  color: var(--text);
+}
+
+.dark .repo-header__owner-link:hover {
+  opacity: 0.65;
+}
+
+.dark .repo-stat-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.dark .repo-stat-card:hover {
+  border-color: rgba(217, 184, 135, 0.4);
+}
+
+.dark .repo-stat-card__icon {
+  color: var(--tan);
+}
+
+.dark .repo-stat-card__value {
+  color: var(--heading);
+}
+
+.dark .repo-stat-card__label {
+  color: var(--text-secondary);
+}
+
+.dark .repo-stat-card__sub {
+  color: var(--border);
+}
+
+.dark .repo-section-title {
+  color: var(--heading);
+  border-color: var(--border);
+}
+
+.dark .repo-lang-bar__seg:hover {
+  opacity: 0.8;
+}
+
+.dark .repo-lang-legend li {
+  color: var(--text-secondary);
+}
+
+.dark .repo-lang-legend em {
+  color: var(--text);
+}
+
+.dark .repo-readme__content {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+}
+
+.dark .repo-readme__pre {
+  color: var(--text-secondary);
+}
+
+.dark .skel {
+  background: linear-gradient(
+    90deg,
+    var(--surface-elevated) 25%,
+    var(--border) 50%,
+    var(--surface-elevated) 75%
+  );
+  background-size: 200% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dark .skel,
+  .dark .page-loader__spinner {
+    animation: none;
+  }
+}

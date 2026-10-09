@@ -289,3 +289,86 @@ a.contact-link-value:hover {
     justify-content: center;
   }
 }
+
+/* ==============================================
+   DARK MODE OVERRIDES — Contact Form
+   ============================================== */
+
+.dark .contact {
+  background: var(--bg-alt);
+}
+
+.dark .contact-link-icon {
+  border-color: rgba(217, 184, 135, 0.35);
+}
+
+.dark .contact-link-item:hover .contact-link-icon {
+  background: rgba(217, 184, 135, 0.12);
+}
+
+.dark .contact-link-value {
+  color: var(--heading);
+}
+
+.dark .contact-resume-btn {
+  border-color: rgba(217, 184, 135, 0.4);
+  color: var(--heading);
+}
+
+.dark .contact-resume-btn:hover {
+  background: var(--tan);
+  border-color: var(--tan);
+  color: var(--oxford);
+  box-shadow: 0 8px 20px rgba(217, 184, 135, 0.3);
+}
+
+.dark .contact-form-wrap {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 8px 32px var(--card-shadow);
+}
+
+.dark .form-group label {
+  color: var(--heading);
+}
+
+.dark .form-group input,
+.dark .form-group textarea {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .form-group input::placeholder,
+.dark .form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.dark .form-group input:focus,
+.dark .form-group textarea:focus {
+  border-color: var(--tan);
+  background: var(--surface-hover);
+  box-shadow: 0 0 0 4px rgba(217, 184, 135, 0.18);
+}
+
+.dark .contact-submit {
+  background: var(--oxford);
+  color: #ffffff;
+}
+
+.dark .contact-submit:hover {
+  background: #00306e;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+.dark .contact-success-icon {
+  border-color: rgba(217, 184, 135, 0.4);
+}
+
+.dark .contact-success h3 {
+  color: var(--heading);
+}
+
+.dark .contact-success p {
+  color: var(--text-secondary);
+}

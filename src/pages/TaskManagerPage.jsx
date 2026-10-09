@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { RefreshCw, WifiOff, Lock, LogIn, UserPlus } from "lucide-react";
 
@@ -30,13 +30,16 @@ const TECH_BADGES = [
 ];
 
 /* ── Stats bar ───────────────────────────────────────────── */
+/* ── Stats bar ───────────────────────────────────────────── */
 function StatsBar({ tasks }) {
   const total = tasks.length;
   const completed = tasks.filter(
-    (t) => t.completed === true || t.status === "completed"
+    (t) => t.status === "completed" || (t.completed === true && !t.status)
   ).length;
-  const pending = total - completed;
-  const pct = total ? Math.round((completed / total) * 100) : 0;
+  const ongoing = tasks.filter((t) => t.status === "ongoing").length;
+  const pending = tasks.filter(
+    (t) => t.status === "pending" || (!t.status && !t.completed)
+  ).length;
 
   return (
     <div className="task-stats" aria-label="Task statistics">
@@ -48,13 +51,13 @@ function StatsBar({ tasks }) {
         <strong>{pending}</strong>
         <span>Pending</span>
       </div>
+      <div className="task-stat-item task-stat-item--ongoing">
+        <strong>{ongoing}</strong>
+        <span>Ongoing</span>
+      </div>
       <div className="task-stat-item task-stat-item--done">
         <strong>{completed}</strong>
         <span>Completed</span>
-      </div>
-      <div className="task-stat-item">
-        <strong>{pct}%</strong>
-        <span>Done</span>
       </div>
     </div>
   );
@@ -161,8 +164,12 @@ function TaskManagerPage() {
 
     if (statusFilter !== "all") {
       result = result.filter((t) => {
-        const isDone = t.completed === true || t.status === "completed";
-        return statusFilter === "completed" ? isDone : !isDone;
+        const currentStatus = t.status
+          ? t.status
+          : t.completed === true
+          ? "completed"
+          : "pending";
+        return currentStatus === statusFilter;
       });
     }
 
@@ -177,11 +184,6 @@ function TaskManagerPage() {
 
     return result;
   }, [tasks, statusFilter, search]);
-
-  const resetFilters = useCallback(() => {
-    setSearch("");
-    setStatusFilter("all");
-  }, []);
 
   /* ── Wrapped CRUD actions with toast feedback ─────────── */
   const handleCreateTask = async (payload) => {
@@ -203,23 +205,6 @@ function TaskManagerPage() {
     } catch (err) {
       showToast(err.message || "Failed to update task.", "error");
       throw err;
-    }
-  };
-
-  const handleToggleStatus = async (task) => {
-    const taskId = task.id || task._id;
-    const isCompleted = task.completed === true || task.status === "completed";
-    try {
-      await updateTask(taskId, {
-        completed: !isCompleted,
-        status: !isCompleted ? "completed" : "pending",
-      });
-      showToast(
-        !isCompleted ? "Task marked as completed." : "Task marked as pending.",
-        "success"
-      );
-    } catch (err) {
-      showToast(err.message || "Failed to update task status.", "error");
     }
   };
 
@@ -293,11 +278,9 @@ function TaskManagerPage() {
                   ) : (
                     <TaskList
                       tasks={filtered}
-                      allTasks={tasks}
+                      statusFilter={statusFilter}
                       onEdit={setEditingTask}
                       onDelete={setTaskToDelete}
-                      onToggleStatus={handleToggleStatus}
-                      onClearFilters={resetFilters}
                     />
                   )}
                 </main>

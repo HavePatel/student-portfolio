@@ -1,4 +1,11 @@
-import { Pencil, Trash2, Calendar, Clock, CheckCircle2, Circle } from "lucide-react";
+import { Pencil, Trash2, Calendar, Clock, CheckCircle2, Circle, PlayCircle } from "lucide-react";
+
+/* ── Status display mapping (non-clickable indicator) ── */
+const STATUS_DISPLAY = {
+  pending: { label: "Pending", icon: Circle, className: "task-status-badge--pending" },
+  ongoing: { label: "Ongoing", icon: PlayCircle, className: "task-status-badge--ongoing" },
+  completed: { label: "Completed", icon: CheckCircle2, className: "task-status-badge--completed" },
+};
 
 /* ── Date helpers ────────────────────────────────────────── */
 function fmtDate(iso) {
@@ -24,46 +31,59 @@ function timeAgo(iso) {
 
 /**
  * TaskCard
- * Displays a single task with status badge, timestamps, and edit/delete actions.
- * Delete action triggers the ConfirmDialog managed by the parent.
+ * Displays a single compact task row with a single non-clickable status indicator,
+ * title, desc, priority, ID, and right-aligned Edit/Delete actions.
  */
-function TaskCard({ task, onEdit, onDelete, onToggleStatus }) {
-  const isCompleted =
-    task.completed === true || task.status === "completed";
+function TaskCard({ task, onEdit, onDelete }) {
+  const currentStatus = task.status
+    ? task.status
+    : task.completed === true
+    ? "completed"
+    : "pending";
+
+  const isCompleted = currentStatus === "completed";
+  const statusInfo = STATUS_DISPLAY[currentStatus] || STATUS_DISPLAY.pending;
+  const StatusIcon = statusInfo.icon;
 
   return (
     <article
       className={`task-card${isCompleted ? " task-card--completed" : ""}`}
       aria-label={`Task: ${task.title}`}
     >
-      {/* ── Status badge ───────────────────────── */}
-      <div className="task-card__top">
-        <button
-          type="button"
-          className={`task-status-badge ${
-            isCompleted
-              ? "task-status-badge--completed"
-              : "task-status-badge--pending"
-          }`}
-          onClick={() => onToggleStatus && onToggleStatus(task)}
-          title="Click to toggle status"
-          aria-label={`Status: ${isCompleted ? "Completed" : "Pending"}`}
-        >
-          {isCompleted ? (
-            <>
-              <CheckCircle2 size={13} strokeWidth={2.2} />
-              <span>Completed</span>
-            </>
-          ) : (
-            <>
-              <Circle size={13} strokeWidth={2.2} />
-              <span>Pending</span>
-            </>
-          )}
-        </button>
+      {/* ── Status indicator (non-clickable) ── */}
+      <div className="task-status-indicator" role="status" aria-label={`Status: ${statusInfo.label}`}>
+        <span className={`task-status-badge ${statusInfo.className}`}>
+          <StatusIcon size={11} strokeWidth={2.2} aria-hidden="true" />
+          <span>{statusInfo.label}</span>
+        </span>
+      </div>
 
-        {/* Priority badge — Practical 5 Supplementary */}
-        {/* Falls back to 'medium' for existing docs without priority */}
+      {/* ── Body & Meta ───────────────────────── */}
+      <div className="task-card__info">
+        <h3 className={`task-card__title${isCompleted ? " task-card__title--done" : ""}`}>
+          {task.title}
+        </h3>
+        {task.description && (
+          <p className="task-card__desc">{task.description}</p>
+        )}
+        <div className="task-card__meta">
+          {task.createdAt && (
+            <span className="task-meta-item" title="Created date">
+              <Calendar size={12} strokeWidth={2} />
+              {fmtDate(task.createdAt)}
+            </span>
+          )}
+          {task.updatedAt && task.updatedAt !== task.createdAt && (
+            <span className="task-meta-item" title="Last updated">
+              <Clock size={12} strokeWidth={2} />
+              {timeAgo(task.updatedAt)}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* ── Priority & ID ──────────────────────── */}
+      <div className="task-card__prio-id">
         <span
           className={`task-priority-badge task-priority-badge--${task.priority ?? "medium"}`}
           aria-label={`Priority: ${task.priority ?? "medium"}`}
@@ -78,41 +98,15 @@ function TaskCard({ task, onEdit, onDelete, onToggleStatus }) {
         )}
       </div>
 
-      {/* ── Body ───────────────────────────────── */}
-      <div className="task-card__body">
-        <h3 className={`task-card__title${isCompleted ? " task-card__title--done" : ""}`}>
-          {task.title}
-        </h3>
-        {task.description && (
-          <p className="task-card__desc">{task.description}</p>
-        )}
-      </div>
-
-      {/* ── Meta ───────────────────────────────── */}
-      <div className="task-card__meta">
-        {task.createdAt && (
-          <span className="task-meta-item" title="Created date">
-            <Calendar size={13} strokeWidth={2} />
-            {fmtDate(task.createdAt)}
-          </span>
-        )}
-        {task.updatedAt && task.updatedAt !== task.createdAt && (
-          <span className="task-meta-item" title="Last updated">
-            <Clock size={13} strokeWidth={2} />
-            {timeAgo(task.updatedAt)}
-          </span>
-        )}
-      </div>
-
-      {/* ── Footer actions ─────────────────────── */}
-      <div className="task-card__footer">
+      {/* ── Actions (aligned right) ────────────── */}
+      <div className="task-card__actions">
         <button
           type="button"
           className="task-btn task-btn--outline task-btn--sm"
           onClick={() => onEdit(task)}
           aria-label={`Edit task: ${task.title}`}
         >
-          <Pencil size={14} strokeWidth={2} />
+          <Pencil size={13} strokeWidth={2} />
           Edit
         </button>
         <button
@@ -121,7 +115,7 @@ function TaskCard({ task, onEdit, onDelete, onToggleStatus }) {
           onClick={() => onDelete(task)}
           aria-label={`Delete task: ${task.title}`}
         >
-          <Trash2 size={14} strokeWidth={2} />
+          <Trash2 size={13} strokeWidth={2} />
           Delete
         </button>
       </div>

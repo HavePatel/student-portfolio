@@ -38,6 +38,7 @@ import { Search, X } from "lucide-react";
 const STATUS_FILTERS = [
   { value: "all",       label: "All"       },
   { value: "pending",   label: "Pending"   },
+  { value: "ongoing",   label: "Ongoing"   },
   { value: "completed", label: "Completed" },
 ];
 

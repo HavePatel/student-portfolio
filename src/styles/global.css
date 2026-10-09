@@ -50,6 +50,14 @@ body{
     --card-shadow:rgba(0,33,71,.06);
     --header-bg:rgba(0, 33, 71, 0.92);
     --header-bg-scrolled:rgba(0, 33, 71, 0.98);
+    
+    /* Semantic status colors (preserved across themes) */
+    --status-pending:#D97706;
+    --status-ongoing:#2563EB;
+    --status-completed:#16A34A;
+    --status-error:#EF4444;
+    --status-warning:#F59E0B;
+    --status-success:#22C55E;
 }
 
 
@@ -68,24 +76,84 @@ body{
     --card-shadow:rgba(0,33,71,.06);
     --header-bg:rgba(0, 33, 71, 0.92);
     --header-bg-scrolled:rgba(0, 33, 71, 0.98);
+    
+    /* Light mode semantic colors */
+    --status-pending:#D97706;
+    --status-ongoing:#2563EB;
+    --status-completed:#16A34A;
+    --status-error:#EF4444;
+    --status-warning:#F59E0B;
+    --status-success:#22C55E;
 }
 
 
 /* ---------- DARK ---------- */
 
 .dark{
-    --bg:#001733;
-    --bg-alt:#002147;
-    --surface:#062A52;
-    --text:#F5F5F5;
-    --text-secondary:#D0D8E4;
-    --text-muted:#A0AEC0;
-    --heading:#D2B48C;
-    --muted:#CFCFCF;
-    --border:rgba(210,180,140,.2);
-    --card-shadow:rgba(0,0,0,.25);
-    --header-bg:rgba(6, 30, 60, 0.95);
-    --header-bg-scrolled:rgba(4, 20, 42, 0.98);
+    /* Midnight Navy × Champagne Gold Palette */
+    --bg:#06172B;                    /* Page background — midnight navy */
+    --bg-alt:#0B2543;                /* Alt background — elevated section */
+    --surface:#0B2543;               /* Card/panel background */
+    --surface-elevated:#173657;      /* Elevated surface — modals, dropdowns, inputs */
+    --surface-hover:#1E426E;         /* Hover state for elevated surfaces */
+    --text:#F1F4F8;                  /* Primary text — soft off-white */
+    --text-secondary:#A5B4C7;        /* Secondary text — muted blue-grey */
+    --text-muted:#7E8FA3;            /* Muted text — placeholders, metadata */
+    --heading:#D9B887;               /* Headings — champagne gold */
+    --muted:#7E8FA3;                 /* Legacy alias */
+    --border:rgba(217, 184, 135, 0.18); /* Borders — subtle gold tint */
+    --border-strong:rgba(217, 184, 135, 0.35); /* Stronger borders for focus */
+    --card-shadow:rgba(0, 0, 0, 0.35);
+    --card-shadow-strong:rgba(0, 0, 0, 0.5);
+    --header-bg:rgba(6, 23, 43, 0.95);
+    --header-bg-scrolled:rgba(6, 23, 43, 0.98);
+    --tan:#D9B887;                   /* Champagne gold — primary accent */
+    --oxford:#06172B;                /* Oxford Blue redefined as midnight navy */
+    --scrollbar-track:#06172B;       /* Scrollbar track */
+    --scrollbar-thumb:rgba(217, 184, 135, 0.35); /* Scrollbar thumb */
+    --scrollbar-thumb-hover:#D9B887; /* Scrollbar thumb hover */
+    
+    /* Dark mode semantic colors (adjusted for contrast) */
+    --status-pending:#FBBF24;
+    --status-ongoing:#60A5FA;
+    --status-completed:#4ADE80;
+    --status-error:#F87171;
+    --status-warning:#FBBF24;
+    --status-success:#4ADE80;
+}
+
+/* ==========================================
+   DARK MODE SCROLLBARS
+   ========================================== */
+
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+  border: 2px solid var(--scrollbar-track);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+.dark ::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track);
+}
+
+/* Firefox scrollbar */
+.dark {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
 }
 
 

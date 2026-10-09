@@ -112,6 +112,11 @@ function LoginPage() {
                 autoComplete="current-password"
               />
             </div>
+            <div style={{ textAlign: "right", marginTop: "0.25rem" }}>
+              <Link to="/forgot-password" className="auth-link" style={{ fontSize: "0.85rem" }}>
+                Forgot your password?
+              </Link>
+            </div>
           </div>
 
           <button

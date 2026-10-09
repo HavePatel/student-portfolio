@@ -201,3 +201,89 @@
   color: #ef4444;
   background: rgba(239, 68, 68, 0.1);
 }
+
+/* ==========================================
+   DARK MODE OVERRIDES — Auth Forms
+   ========================================== */
+
+.dark .auth-page {
+  background-color: var(--bg);
+}
+
+.dark .auth-card {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 10px 30px var(--card-shadow);
+}
+
+.dark .auth-title {
+  color: var(--heading);
+}
+
+.dark .auth-subtitle {
+  color: var(--text-secondary);
+}
+
+.dark .auth-label {
+  color: var(--heading);
+}
+
+.dark .auth-input-icon {
+  color: var(--text-muted);
+}
+
+.dark .auth-input {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .auth-input:focus {
+  border-color: var(--tan);
+  box-shadow: 0 0 0 3px rgba(217, 184, 135, 0.2);
+}
+
+.dark .auth-error-banner {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.3);
+  color: var(--status-error);
+}
+
+.dark .auth-success-banner {
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.3);
+  color: var(--status-success);
+}
+
+.dark .auth-submit-btn {
+  background-color: var(--oxford);
+  color: #ffffff;
+  border-color: var(--border);
+}
+
+.dark .auth-submit-btn:hover:not(:disabled) {
+  background-color: #00306e;
+  filter: none;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.dark .auth-footer {
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+.dark .auth-link {
+  color: var(--tan);
+}
+
+.dark .auth-user-badge {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .auth-logout-btn:hover {
+  color: var(--status-error);
+  background: rgba(248, 113, 113, 0.15);
+}

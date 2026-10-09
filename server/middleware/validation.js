@@ -63,11 +63,51 @@ export const validateLogin = (req, res, next) => {
 };
 
 /**
+ * Validates POST /forgot-password payload.
+ */
+export const validateForgotPassword = (req, res, next) => {
+  const { email } = req.body || {};
+  const errors = [];
+
+  if (!email || typeof email !== "string" || !email.trim()) {
+    errors.push("Email is required.");
+  } else if (!EMAIL_REGEX.test(email.trim())) {
+    errors.push("Please provide a valid email address.");
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ success: false, errors });
+  }
+
+  next();
+};
+
+/**
+ * Validates POST /reset-password/:token payload.
+ */
+export const validateResetPassword = (req, res, next) => {
+  const { password } = req.body || {};
+  const errors = [];
+
+  if (!password || typeof password !== "string" || !password.trim()) {
+    errors.push("Password is required.");
+  } else if (password.trim().length < 6) {
+    errors.push("Password must be at least 6 characters long.");
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ success: false, errors });
+  }
+
+  next();
+};
+
+/**
  * Validates POST /tasks creation payload.
- * Practical 5 Supplementary: validates optional `priority` field.
+ * Validates optional `status` and `priority` fields.
  */
 export const validateCreateTask = (req, res, next) => {
-  const { title, priority } = req.body || {};
+  const { title, status, priority } = req.body || {};
   const errors = [];
 
   if (!title || typeof title !== "string" || !title.trim()) {
@@ -76,7 +116,11 @@ export const validateCreateTask = (req, res, next) => {
     errors.push("Title cannot exceed 120 characters.");
   }
 
-  // Practical 5 Supplementary — priority enum validation
+  if (status !== undefined && !["pending", "ongoing", "completed"].includes(status)) {
+    errors.push("Status must be 'pending', 'ongoing', or 'completed'.");
+  }
+
+  // Priority enum validation
   if (priority !== undefined && !["low", "medium", "high"].includes(priority)) {
     errors.push("Priority must be 'low', 'medium', or 'high'.");
   }
@@ -90,7 +134,7 @@ export const validateCreateTask = (req, res, next) => {
 
 /**
  * Validates PUT /tasks/:id payload for partial task updates.
- * Practical 5 Supplementary: validates optional `priority` field.
+ * Validates optional `status` and `priority` fields.
  */
 export const validateUpdateTask = (req, res, next) => {
   const { title, description, status, completed, priority } = req.body || {};
@@ -111,12 +155,12 @@ export const validateUpdateTask = (req, res, next) => {
   }
 
   if (status !== undefined) {
-    if (!["pending", "completed"].includes(status)) {
-      errors.push("Status must be either 'pending' or 'completed'.");
+    if (!["pending", "ongoing", "completed"].includes(status)) {
+      errors.push("Status must be 'pending', 'ongoing', or 'completed'.");
     }
   }
 
-  // Practical 5 Supplementary — priority enum validation
+  // Priority enum validation
   if (priority !== undefined && !["low", "medium", "high"].includes(priority)) {
     errors.push("Priority must be 'low', 'medium', or 'high'.");
   }

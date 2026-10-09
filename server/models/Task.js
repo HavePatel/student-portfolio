@@ -41,17 +41,11 @@ const taskSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ["pending", "completed"],
-        message: "Status must be either 'pending' or 'completed'.",
+        values: ["pending", "ongoing", "completed"],
+        message: "Status must be 'pending', 'ongoing', or 'completed'.",
       },
       default: "pending",
     },
-    /*
-     * Practical 5 Supplementary — Priority field
-     * Restricted to three values via Mongoose enum validation.
-     * Existing documents without priority will read as undefined
-     * but default to 'medium' on next save.
-     */
     priority: {
       type: String,
       enum: {
@@ -60,6 +54,11 @@ const taskSchema = new mongoose.Schema(
       },
       default: "medium",
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      index: true,
+    },
   },
   {
     timestamps: true,
@@ -67,11 +66,11 @@ const taskSchema = new mongoose.Schema(
       virtuals: true,
       transform: (_doc, ret) => {
         ret.id = ret._id.toString();
-        // Synchronize status and completed in JSON output
-        if (ret.completed !== undefined) {
-          ret.status = ret.completed ? "completed" : "pending";
-        } else if (ret.status !== undefined) {
+        // Synchronize status and completed in JSON output safely
+        if (ret.status !== undefined) {
           ret.completed = ret.status === "completed";
+        } else if (ret.completed !== undefined) {
+          ret.status = ret.completed ? "completed" : "pending";
         }
         return ret;
       },
@@ -89,22 +88,19 @@ const taskSchema = new mongoose.Schema(
 /*
  * Pre-save hook — runs before every Task.save() call.
  *
- * Responsibility 1 (existing): Keep completed ↔ status in sync.
+ * Responsibility 1: Keep completed ↔ status in sync.
  * Responsibility 2 (Practical 5 Supplementary): Trim whitespace from title.
- *
- * Both concerns are handled in a single hook to avoid duplicate
- * middleware registration and keep execution order predictable.
  */
 taskSchema.pre("save", function (next) {
-  // Practical 5 Supplementary — auto-trim title whitespace
+  // Auto-trim title whitespace
   if (this.title && typeof this.title === "string") {
     this.title = this.title.trim();
   }
 
-  // Existing — keep completed boolean and status string in sync
+  // Keep completed boolean and status string in sync
   if (this.isModified("completed") && !this.isModified("status")) {
     this.status = this.completed ? "completed" : "pending";
-  } else if (this.isModified("status") && !this.isModified("completed")) {
+  } else if (this.isModified("status")) {
     this.completed = this.status === "completed";
   }
 

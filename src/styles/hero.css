@@ -322,3 +322,79 @@
         font-size: 1.5rem;
     }
 }
+
+/* ================================================
+   DARK MODE OVERRIDES — Hero
+   ================================================ */
+
+.dark .hero {
+  background: var(--bg);
+}
+
+.dark .hero-tag {
+  color: var(--tan);
+}
+
+.dark .hero h1 {
+  color: var(--heading);
+}
+
+.dark .hero h2 {
+  color: var(--text);
+}
+
+.dark .hero-tech {
+  color: var(--tan);
+}
+
+.dark .hero-description {
+  color: var(--text-secondary);
+}
+
+.dark .orbit-ring {
+  border-color: rgba(217, 184, 135, 0.2);
+}
+
+.dark .hero-circle {
+  border-color: rgba(217, 184, 135, 0.6);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+}
+
+.dark .hero-circle::before {
+  border-color: rgba(217, 184, 135, 0.15);
+}
+
+.dark .hero-circle:hover {
+  box-shadow:
+    0 0 25px rgba(217, 184, 135, 0.12),
+    0 0 60px rgba(217, 184, 135, 0.06);
+}
+
+.dark .logo-h,
+.dark .logo-p {
+  color: var(--tan);
+}
+
+.dark .logo-divider {
+  background: var(--tan);
+}
+
+.dark .dot {
+  background: var(--tan);
+  box-shadow: 0 0 10px rgba(217, 184, 135, 0.4);
+}
+
+.dark .hero-social a {
+  border-color: rgba(217, 184, 135, 0.45);
+  color: var(--tan);
+}
+
+.dark .hero-social a:hover {
+  background: var(--tan);
+  color: var(--oxford);
+}
+
+.dark .scroll-indicator {
+  color: var(--tan);
+}

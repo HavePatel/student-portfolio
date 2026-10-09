@@ -18,6 +18,10 @@ const NAV_ITEMS = [
   { label: "Contact",   to: "/contact"   },
 ];
 
+const ADMIN_NAV_ITEMS = [
+  { label: "Admin",     to: "/admin"     },
+];
+
 function Header() {
   const [scrolled,  setScrolled]  = useState(false);
   const [menuOpen,  setMenuOpen]  = useState(false);
@@ -78,6 +82,18 @@ function Header() {
                   </NavLink>
                 </li>
               ))}
+              {user?.role === "admin" &&
+                ADMIN_NAV_ITEMS.map(({ label, to }) => (
+                  <li key={to}>
+                    <NavLink
+                      to={to}
+                      className={({ isActive }) => `nav-link${isActive ? " nav-link--active" : ""}`}
+                      onClick={close}
+                    >
+                      {label}
+                    </NavLink>
+                  </li>
+                ))}
             </ul>
           </nav>
 
@@ -157,6 +173,17 @@ function Header() {
               </NavLink>
             </li>
           ))}
+          {user?.role === "admin" && (
+            <li>
+              <NavLink
+                to="/admin"
+                className={({ isActive }) => `nav-mobile__link${isActive ? " nav-mobile__link--active" : ""}`}
+                onClick={close}
+              >
+                Admin
+              </NavLink>
+            </li>
+          )}
           {isAuthenticated ? (
             <li style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 1rem" }}>

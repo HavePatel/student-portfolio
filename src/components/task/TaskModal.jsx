@@ -1,16 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Save, Loader2 } from "lucide-react";
 
+const getInitialStatus = (t) => {
+  if (t?.status) return t.status;
+  if (t?.completed === true) return "completed";
+  return "pending";
+};
+
 /**
  * TaskModal
  * Modal dialog for editing an existing task (Practical 6).
- * Handles updating title, description, and completion status.
+ * Handles updating title, description, status (pending/ongoing/completed), and priority.
  */
 function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
   const [fields, setFields] = useState({
     title: task?.title ?? "",
     description: task?.description ?? "",
-    completed: task?.completed === true || task?.status === "completed",
+    status: getInitialStatus(task),
     priority: task?.priority ?? "medium",   // Practical 5 Supplementary
   });
   const [errors, setErrors] = useState({});
@@ -31,7 +37,7 @@ function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
       setFields({
         title: task.title ?? "",
         description: task.description ?? "",
-        completed: task.completed === true || task.status === "completed",
+        status: getInitialStatus(task),
         priority: task.priority ?? "medium",   // Practical 5 Supplementary
       });
     }
@@ -49,9 +55,8 @@ function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
   }, [onClose, isLoading]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const val = type === "checkbox" ? checked : value;
-    setFields((prev) => ({ ...prev, [name]: val }));
+    const { name, value } = e.target;
+    setFields((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
     if (apiError) setApiError("");
   };
@@ -81,8 +86,8 @@ function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
       await onSave(taskId, {
         title: fields.title.trim(),
         description: fields.description.trim(),
-        completed: Boolean(fields.completed),
-        status: fields.completed ? "completed" : "pending",
+        status: fields.status,
+        completed: fields.status === "completed",
         priority: fields.priority,   // Practical 5 Supplementary
       });
       onClose();
@@ -173,18 +178,23 @@ function TaskModal({ task, onSave, onClose, loading: externalLoading }) {
             />
           </div>
 
-          {/* Completed Checkbox */}
-          <div className="task-field task-field--checkbox">
-            <label className="task-checkbox-label">
-              <input
-                type="checkbox"
-                name="completed"
-                checked={fields.completed}
-                onChange={handleChange}
-                className="task-checkbox"
-              />
-              <span>Completed</span>
+          {/* Status Select */}
+          <div className="task-field">
+            <label htmlFor="modal-status" className="task-label">
+              Status
             </label>
+            <select
+              id="modal-status"
+              name="status"
+              className="task-select"
+              value={fields.status}
+              onChange={handleChange}
+              aria-label="Task status"
+            >
+              <option value="pending">Pending</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="completed">Completed</option>
+            </select>
           </div>
 
           {/* Priority — Practical 5 Supplementary */}

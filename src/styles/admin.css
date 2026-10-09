@@ -1,0 +1,528 @@
+/* ==============================================
+   ADMIN DASHBOARD
+   Theme-aligned with Student Portfolio design
+   ============================================== */
+
+.admin-page {
+  background: var(--bg);
+}
+
+.admin-hero {
+  background: var(--oxford);
+}
+
+.admin-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 30px var(--card-shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  max-width: 500px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.admin-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+
+.admin-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 1rem;
+}
+
+.admin-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1.75rem;
+}
+
+.admin-section {
+  max-width: 900px;
+  margin: 0 auto 3rem;
+}
+
+.admin-section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-section-title svg {
+  color: var(--tan);
+}
+
+.admin-input-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.admin-input-wrapper {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-input-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.admin-input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+  color: var(--text);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.admin-input:focus {
+  border-color: var(--tan);
+  box-shadow: 0 0 0 3px rgba(217, 184, 135, 0.18);
+  background: var(--surface-hover);
+}
+
+.admin-input::placeholder {
+  color: var(--text-muted);
+}
+
+.admin-btn-primary {
+  padding: 0.6rem 1.2rem;
+  background: var(--tan);
+  color: var(--oxford);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-btn-primary:hover:not(:disabled) {
+  background: #c4a378;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(217, 184, 135, 0.3);
+}
+
+.admin-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-btn-secondary {
+  padding: 0.6rem 1.2rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.admin-btn-secondary:hover:not(:disabled) {
+  background: var(--surface-elevated);
+  border-color: var(--tan);
+  transform: translateY(-1px);
+}
+
+.admin-btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--status-error);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.admin-report {
+  margin-top: 1.5rem;
+}
+
+.admin-summary {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.admin-summary-card {
+  flex: 1;
+  min-width: 120px;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px var(--card-shadow);
+}
+
+.admin-summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--heading);
+  font-family: "Cormorant Garamond", serif;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.admin-summary-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-summary-card--total .admin-summary-value { color: var(--heading); }
+.admin-summary-card--pending .admin-summary-value { color: var(--status-pending); }
+.admin-summary-card--ongoing .admin-summary-value { color: var(--status-ongoing); }
+.admin-summary-card--completed .admin-summary-value { color: var(--status-completed); }
+
+.admin-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.admin-table thead {
+  background: var(--bg-alt);
+}
+
+.admin-table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--heading);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+  background: var(--surface-elevated);
+}
+
+.admin-table .task-title {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-table .task-desc {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-table .task-user {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-table .task-date {
+  white-space: nowrap;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.admin-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.admin-status-badge--pending {
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--status-pending);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.admin-status-badge--ongoing {
+  background: rgba(96, 165, 250, 0.15);
+  color: var(--status-ongoing);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.admin-status-badge--completed {
+  background: rgba(74, 222, 128, 0.15);
+  color: var(--status-completed);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.admin-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.admin-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Priority badges in admin table */
+.admin-priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-priority-badge--low {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+  border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+.admin-priority-badge--medium {
+  background: rgba(217, 184, 135, 0.15);
+  color: var(--tan);
+  border: 1px solid rgba(217, 184, 135, 0.35);
+}
+
+.admin-priority-badge--high {
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--status-error);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+/* ==============================================
+   DARK MODE OVERRIDES — Admin Dashboard
+   ============================================== */
+
+.dark .admin-page {
+  background: var(--bg);
+}
+
+.dark .admin-hero {
+  background: var(--oxford);
+}
+
+.dark .admin-card {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 10px 30px var(--card-shadow);
+}
+
+.dark .admin-icon {
+  background: rgba(217, 184, 135, 0.12);
+  color: var(--tan);
+}
+
+.dark .admin-title {
+  color: var(--heading);
+}
+
+.dark .admin-subtitle {
+  color: var(--text-secondary);
+}
+
+.dark .admin-section-title {
+  color: var(--heading);
+}
+
+.dark .admin-section-title svg {
+  color: var(--tan);
+}
+
+.dark .admin-input-label {
+  color: var(--text-secondary);
+}
+
+.dark .admin-input {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .admin-input:focus {
+  border-color: var(--tan);
+  box-shadow: 0 0 0 3px rgba(217, 184, 135, 0.2);
+  background: var(--surface-hover);
+}
+
+.dark .admin-input::placeholder {
+  color: var(--text-muted);
+}
+
+.dark .admin-btn-primary {
+  background: var(--tan);
+  color: var(--oxford);
+}
+
+.dark .admin-btn-primary:hover:not(:disabled) {
+  background: #c4a378;
+  box-shadow: 0 6px 20px rgba(217, 184, 135, 0.4);
+}
+
+.dark .admin-btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.dark .admin-btn-secondary:hover:not(:disabled) {
+  background: var(--surface-elevated);
+  border-color: var(--tan);
+}
+
+.dark .admin-error {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.3);
+  color: var(--status-error);
+}
+
+.dark .admin-summary-card {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 2px 8px var(--card-shadow);
+}
+
+.dark .admin-summary-value {
+  color: var(--heading);
+}
+
+.dark .admin-summary-label {
+  color: var(--text-secondary);
+}
+
+.dark .admin-summary-card--pending .admin-summary-value { color: var(--status-pending); }
+.dark .admin-summary-card--ongoing .admin-summary-value { color: var(--status-ongoing); }
+.dark .admin-summary-card--completed .admin-summary-value { color: var(--status-completed); }
+
+.dark .admin-table-wrap {
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+.dark .admin-table thead {
+  background: var(--bg-alt);
+}
+
+.dark .admin-table th {
+  color: var(--heading);
+  border-bottom-color: var(--border);
+}
+
+.dark .admin-table td {
+  border-bottom-color: var(--border);
+  color: var(--text);
+}
+
+.dark .admin-table tbody tr:hover {
+  background: var(--surface-elevated);
+}
+
+.dark .admin-table .task-date {
+  color: var(--text-secondary);
+}
+
+.dark .admin-empty {
+  color: var(--text-secondary);
+}
+
+.dark .admin-status-badge--pending {
+  background: rgba(251, 191, 36, 0.18);
+  color: var(--status-pending);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.dark .admin-status-badge--ongoing {
+  background: rgba(96, 165, 250, 0.18);
+  color: var(--status-ongoing);
+  border-color: rgba(96, 165, 250, 0.35);
+}
+
+.dark .admin-status-badge--completed {
+  background: rgba(74, 222, 128, 0.18);
+  color: var(--status-completed);
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.dark .admin-priority-badge--low {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.dark .admin-priority-badge--medium {
+  background: rgba(217, 184, 135, 0.15);
+  color: var(--tan);
+  border-color: rgba(217, 184, 135, 0.35);
+}
+
+.dark .admin-priority-badge--high {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--status-error);
+  border-color: rgba(248, 113, 113, 0.35);
+}

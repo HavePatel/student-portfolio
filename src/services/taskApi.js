@@ -115,3 +115,55 @@ export const deleteTask = (id) =>
   apiFetch(`/tasks/${id}`, {
     method: "DELETE",
   });
+
+/**
+ * Fetch task report for a specific date range (admin only).
+ * @param {string} fromDate - Start date (YYYY-MM-DD)
+ * @param {string} toDate - End date (YYYY-MM-DD)
+ * @returns {Promise<{ success: boolean, data: Array, count: number, dateRange: Object }>}
+ */
+export const getTaskReport = (fromDate, toDate) =>
+  apiFetch(`/admin/reports/tasks?fromDate=${fromDate}&toDate=${toDate}`);
+
+/**
+ * Download task report as PDF (admin only).
+ * Uses a separate fetch because the response is binary, not JSON.
+ * @param {string} fromDate - Start date (YYYY-MM-DD)
+ * @param {string} toDate - End date (YYYY-MM-DD)
+ * @returns {Promise<void>}
+ */
+export const downloadTaskReportPdf = async (fromDate, toDate) => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(
+    `${BASE_URL}/admin/reports/tasks/pdf?fromDate=${fromDate}&toDate=${toDate}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      // Mirror apiFetch: clear token and notify the app on expired session
+      localStorage.removeItem("token");
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+    }
+    const json = await res.json().catch(() => ({}));
+    const message =
+      json.errors?.[0] || `Request failed with status ${res.status}`;
+    const err = new Error(message);
+    err.status = res.status;
+    throw err;
+  }
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `task-report-${fromDate}-to-${toDate}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};

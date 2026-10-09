@@ -81,3 +81,41 @@ export const getMeApi = (token) =>
       Authorization: `Bearer ${token}`,
     },
   });
+
+/**
+ * Log out and terminate the server-side session.
+ * The backend deletes the session record so the current JWT is rejected
+ * everywhere, including other tabs sharing the same token.
+ * @param {string} token
+ * @returns {Promise<{ success: boolean, message: string }>}
+ */
+export const logoutApi = (token) =>
+  authFetch("/auth/logout", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+/**
+ * Request password reset instructions.
+ * @param {string} email
+ * @returns {Promise<{ success: boolean, message: string }>}
+ */
+export const forgotPasswordApi = (email) =>
+  authFetch("/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+
+/**
+ * Reset password using reset token.
+ * @param {string} token
+ * @param {string} password
+ * @returns {Promise<{ success: boolean, message: string }>}
+ */
+export const resetPasswordApi = (token, password) =>
+  authFetch(`/reset-password/${token}`, {
+    method: "POST",
+    body: JSON.stringify({ password }),
+  });
